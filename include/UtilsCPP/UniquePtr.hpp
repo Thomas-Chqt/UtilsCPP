@@ -35,6 +35,14 @@ public:
     template<typename Y, typename... ARGS>
     friend inline UniquePtr<Y> makeUnique(ARGS&&... args);
 
+    template<typename Y>
+    UniquePtr<Y> staticCast()
+    {
+        UniquePtr<Y> output(static_cast<Y*>(m_pointer));
+        m_pointer = nullptr;
+        return output;
+    }
+
     void clear()
     {
         delete m_pointer;
@@ -43,7 +51,7 @@ public:
     
     ~UniquePtr()
     {
-        delete m_pointer;
+        clear();
     }
 
 #ifdef GOOGLETEST_INCLUDE_GTEST_GTEST_H_

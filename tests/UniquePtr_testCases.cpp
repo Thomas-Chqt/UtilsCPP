@@ -98,6 +98,21 @@ TYPED_TEST(UniquePtr, makeUnique)
         EXPECT_EQ(*utils::makeUnique<TypeParam>(data).m_pointer, data);
 }
 
+TEST(UniquePtr, staticCast)
+{
+    using utils::UniquePtr;
+    using utils::makeUnique;
+
+    struct Base { int nbr = 3; };
+    struct Derived : public Base { int nbr = 3; };
+
+    UniquePtr<Derived> derivedPtr = makeUnique<Derived>();
+    UniquePtr<Base> basePtr = derivedPtr.staticCast<Base>();
+
+    EXPECT_EQ(basePtr->nbr, 3);
+    EXPECT_TRUE(derivedPtr == false);
+}
+
 TYPED_TEST(UniquePtr, clear)
 {
     using UniquePtr = utils::UniquePtr<TypeParam>;
@@ -108,7 +123,6 @@ TYPED_TEST(UniquePtr, clear)
     this->nullPointer.clear();
     EXPECT_EQ(this->nullPointer.m_pointer, nullptr);
 }
-
 
 TYPED_TEST(UniquePtr, copyAssignementOperator)
 {
