@@ -87,26 +87,25 @@ TYPED_TEST(UniquePtr, moveConstructor)
     }
 }
 
-TYPED_TEST(UniquePtr, makeUnique)
+TYPED_TEST(UniquePtr, ptrConstructor)
 {
     using UniquePtr = utils::UniquePtr<TypeParam>;
     using Type      = typename UniquePtr::Type;
 
-    EXPECT_NE(utils::makeUnique<TypeParam>().m_pointer, nullptr);
+    EXPECT_NE(UniquePtr(new TypeParam).m_pointer, nullptr);
 
     for (auto& data : { random<TypeParam>(), random<TypeParam>(), random<TypeParam>() })
-        EXPECT_EQ(*utils::makeUnique<TypeParam>(data).m_pointer, data);
+        EXPECT_EQ(*UniquePtr(new TypeParam(data)).m_pointer, data);
 }
 
 TEST(UniquePtr, staticCast)
 {
     using utils::UniquePtr;
-    using utils::makeUnique;
 
     struct Base { int nbr = 3; };
     struct Derived : public Base { int nbr = 3; };
 
-    UniquePtr<Derived> derivedPtr = makeUnique<Derived>();
+    UniquePtr<Derived> derivedPtr = UniquePtr<Derived>(new Derived);
     UniquePtr<Base> basePtr = derivedPtr.staticCast<Base>();
 
     EXPECT_EQ(basePtr->nbr, 3);

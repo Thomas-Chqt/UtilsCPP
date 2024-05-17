@@ -10,8 +10,6 @@
 #ifndef UNIQUEPTR_HPP
 # define UNIQUEPTR_HPP
 
-#include <utility>
-
 namespace utils
 {
 
@@ -32,14 +30,18 @@ public:
         mv.m_pointer = nullptr;
     }
 
-    template<typename Y, typename... ARGS>
-    friend inline UniquePtr<Y> makeUnique(ARGS&&... args);
+    explicit UniquePtr(Type* ptr) : m_pointer(ptr) 
+    {
+    }
 
     template<typename Y>
     UniquePtr<Y> staticCast()
     {
-        UniquePtr<Y> output(static_cast<Y*>(m_pointer));
+        UniquePtr<Y> output;
+
+        output.m_pointer = static_cast<Y*>(m_pointer);
         m_pointer = nullptr;
+
         return output;
     }
 
@@ -59,10 +61,6 @@ public:
 #else
 private:
 #endif
-    UniquePtr(Type* ptr) : m_pointer(ptr) 
-    {
-    }
-
     Type* m_pointer = nullptr;
 
 public:
@@ -89,9 +87,6 @@ public:
 
     inline operator bool () const { return m_pointer != nullptr; }
 };
-
-template<typename T, typename... ARGS>
-inline UniquePtr<T> makeUnique(ARGS&&... args) { return UniquePtr<T>(new T(std::forward<ARGS>(args)...)); }
 
 }
 

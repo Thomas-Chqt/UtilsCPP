@@ -33,8 +33,25 @@ TYPED_TEST(SharedPtrTest, defaultConstructor)
 
     SharedPtr ptr1;
 
-    EXPECT_EQ(ptr1.m_pointer, nullptr);
-    EXPECT_EQ(ptr1.m_refCount, nullptr);
+    EXPECT_EQ((TypeParam*)ptr1, nullptr);
+    EXPECT_EQ(ptr1.refCount(), 0);
+}
+
+TYPED_TEST(SharedPtrTest, copyConstructor)
+{
+    using SharedPtr = SharedPtr<TypeParam>;
+    using Type      = typename SharedPtr::Type;
+
+    SharedPtr ptr1 = SharedPtr(new TypeParam);
+
+    {
+        SharedPtr ptr2(ptr1);
+        EXPECT_EQ((TypeParam*)ptr2, (TypeParam*)ptr1);
+        EXPECT_EQ(ptr2.refCount(), 2);
+        EXPECT_EQ(ptr1.refCount(), 2);
+    }
+
+    EXPECT_EQ(ptr1.refCount(), 1);
 }
 
 }
