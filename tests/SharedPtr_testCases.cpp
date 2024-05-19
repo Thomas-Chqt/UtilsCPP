@@ -54,4 +54,37 @@ TYPED_TEST(SharedPtrTest, copyConstructor)
     EXPECT_EQ(ptr1.refCount(), 1);
 }
 
+TEST(SharedPtrTest, dynamicCastSuccess)
+{
+    using utils::SharedPtr;
+
+    struct Base { int nbr = 3; virtual ~Base() = default; };
+    struct Derived : public Base { int nbr = 3; ~Derived() override = default; };
+
+    SharedPtr<Base>    basePtr    = SharedPtr<Base>(new Derived);
+    SharedPtr<Derived> derivedPtr = basePtr.dynamicCast<Derived>();
+
+    EXPECT_TRUE(basePtr == true);
+    EXPECT_EQ(basePtr.refCount(), 2);
+
+    EXPECT_TRUE(derivedPtr == true);
+    EXPECT_EQ(derivedPtr.refCount(), 2);
+}
+
+TEST(SharedPtrTest, dynamicCastFail)
+{
+    using utils::SharedPtr;
+
+    struct Base { int nbr = 3; virtual ~Base() = default; };
+    struct Derived : public Base { int nbr = 3; ~Derived() override = default; };
+
+    SharedPtr<Base>    basePtr    = SharedPtr<Base>(new Base);
+    SharedPtr<Derived> derivedPtr = basePtr.dynamicCast<Derived>();
+
+    EXPECT_TRUE(basePtr == true);
+    EXPECT_EQ(basePtr.refCount(), 1);
+
+    EXPECT_TRUE(derivedPtr == false);
+}
+
 }

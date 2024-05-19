@@ -12,7 +12,7 @@ if(NOT hasParent)
     project(UtilsCPP LANGUAGES CXX)
 endif()
 
-if (LOGGER_BUILD_TESTS)
+if (UTILSCPP_BUILD_TESTS)
     enable_testing()
 endif()
     

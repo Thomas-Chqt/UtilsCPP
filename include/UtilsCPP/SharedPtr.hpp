@@ -18,6 +18,9 @@ namespace utils
 template<typename T>
 class SharedPtr
 {
+private:
+    template<typename Y> friend class SharedPtr;
+
 public:
     using Type = T;
 
@@ -48,6 +51,23 @@ public:
         SharedPtr<Y> output;
 
         output.m_pointer = static_cast<Y*>(m_pointer);
+        output.m_refCount = m_refCount;
+
+        if (output.m_refCount != nullptr)
+            *output.m_refCount += 1;
+
+        return output;
+    }
+
+    template<typename Y>
+    SharedPtr<Y> dynamicCast()
+    {
+        SharedPtr<Y> output;
+
+        output.m_pointer = dynamic_cast<Y*>(m_pointer);
+        if (output.m_pointer == nullptr)
+            return SharedPtr<Y>();
+
         output.m_refCount = m_refCount;
 
         if (output.m_refCount != nullptr)
