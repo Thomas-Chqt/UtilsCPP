@@ -118,7 +118,7 @@ public:
     }
 
 private:
-    ICallable* m_callable = nullptr; // TODO use unique pointer
+    ICallable* m_callable = nullptr; // TODO use unique pointer ? (maybe a shared pointer)
 
 public:
     inline ReturnValue operator () (Args... args) const { return m_callable->call(args...); }

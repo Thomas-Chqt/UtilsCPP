@@ -46,7 +46,7 @@ public:
     inline uint32 refCount() const { return m_refCount == nullptr ? 0 : *m_refCount; }
 
     template<typename Y>
-    SharedPtr<Y> staticCast()
+    SharedPtr<Y> staticCast() const
     {
         SharedPtr<Y> output;
 
@@ -60,7 +60,7 @@ public:
     }
 
     template<typename Y>
-    SharedPtr<Y> dynamicCast()
+    SharedPtr<Y> dynamicCast() const
     {
         SharedPtr<Y> output;
 
@@ -85,9 +85,9 @@ public:
         {
             delete m_pointer;
             delete m_refCount;
-            m_pointer = nullptr;
-            m_refCount = nullptr;
         }
+        m_pointer = nullptr;
+        m_refCount = nullptr;
     }
 
     ~SharedPtr()
