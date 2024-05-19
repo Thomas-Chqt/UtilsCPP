@@ -12,7 +12,9 @@ if(NOT hasParent)
     project(UtilsCPP LANGUAGES CXX)
 endif()
 
-enable_testing()
+if (LOGGER_BUILD_TESTS)
+    enable_testing()
+endif()
     
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,16 +31,6 @@ endif()
 file(GLOB_RECURSE UTILSCPP_SRC "src/*.cpp" "src/*.tpp" "include/*.tpp" "src/*.hpp" "include/*.hpp")
 target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})
 target_include_directories(UtilsCPP PRIVATE "src" PUBLIC "include")
-
-if (ENABLE_LLVM_SOURCE_BASED_CODE_COVERAGE)
-    target_compile_options(UtilsCPP PRIVATE -fprofile-instr-generate -fcoverage-mapping)
-    target_link_options(UtilsCPP    PRIVATE -fprofile-instr-generate -fcoverage-mapping)
-endif()
-
-if (ENABLE_LLVM_FSANITIZER)
-    target_compile_options(UtilsCPP PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls)
-    target_link_options(UtilsCPP    PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls)
-endif()
 
 if (UTILSCPP_BUILD_TESTS)
     add_subdirectory(tests)

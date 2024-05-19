@@ -21,20 +21,7 @@ target_sources(UtilsCPP_test PRIVATE ${UTILSCPP_TEST_SRC})
 
 target_include_directories(UtilsCPP_test PRIVATE ".")
 
-if (ENABLE_LLVM_SOURCE_BASED_CODE_COVERAGE)
-    target_compile_options(UtilsCPP_test PRIVATE -fprofile-instr-generate -fcoverage-mapping)
-    target_link_options(UtilsCPP_test PRIVATE -fprofile-instr-generate -fcoverage-mapping)
-endif()
-
-if (ENABLE_LLVM_FSANITIZER)
-    target_compile_options(UtilsCPP_test PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls)
-    target_link_options(UtilsCPP_test    PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls)
-endif()
-
-
-target_link_libraries(UtilsCPP_test PRIVATE UtilsCPP)
-
 FetchContent_MakeAvailable(googletest)
-target_link_libraries(UtilsCPP_test PRIVATE GTest::gtest_main)
+target_link_libraries(UtilsCPP_test UtilsCPP GTest::gtest_main)
 
 gtest_discover_tests(UtilsCPP_test)
