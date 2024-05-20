@@ -11,6 +11,7 @@
 # define SHAREDPTR_HPP
 
 #include "UtilsCPP/Types.hpp"
+#include <ostream>
 
 namespace utils
 {
@@ -135,6 +136,8 @@ public:
     template<typename Y> inline bool operator != (const SharedPtr<Y>& rhs) const { return (void*)m_pointer != (void*)rhs.m_pointer; }
 
     inline operator bool () const { return m_pointer != nullptr; }
+
+    inline friend std::ostream& operator << (std::ostream& os, const SharedPtr<T>& ptr) { return os << (void*)ptr.m_pointer; }
 };
 
 }
