@@ -12,6 +12,7 @@
 
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Array.hpp"
+#include <istream>
 
 namespace utils
 {
@@ -32,6 +33,8 @@ public:
 
     String(const char *&& literal);
     String(Size length, char c = '\0');
+    
+    static String contentOf(std::istream&);
 
     inline Size length()   const { return m_characters.length() - 1; }
     inline Size capacity() const { return m_characters.capacity(); } // capacity include the \0 character 
@@ -42,6 +45,8 @@ public:
     inline const_Iterator begin() const { return   m_characters.begin(); }
     inline       Iterator end()         { return --m_characters.end();   }
     inline const_Iterator end()   const { return --m_characters.end();   }
+
+    void append(char c);
 
     ~String() = default;
 
@@ -61,6 +66,9 @@ public:
 
     inline       char& operator [] (Index idx)       { return m_characters[idx]; }; //TODO : Add throw
     inline const char& operator [] (Index idx) const { return m_characters[idx]; }; //TODO : Add throw
+
+    inline operator       char* ()       { return (      char*)m_characters; }
+    inline operator const char* () const { return (const char*)m_characters; }
 };
 
 }

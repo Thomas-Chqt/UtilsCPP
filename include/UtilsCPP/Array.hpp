@@ -10,6 +10,7 @@
 #ifndef ARRAY_HPP
 # define ARRAY_HPP
 
+#include "UtilsCPP/Iterator.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Func.hpp"
 
@@ -163,19 +164,20 @@ public:
         return Iterator(*this, m_length - 1);
     }
 
-    // Element remove(const Iterator& it)
-    // {
-    //     Iterator id_end = end();
-    //     if (it == id_end)
-    //         return;
-    //     Iterator it_next = ++Iterator(it);
-    //     while (it_next != id_end)
-    //         swap(it++, it_next++);
-    //     (*it).~Element();
-    //     --m_length;
-    //     if (m_length <= m_capacity / 2)
-    //         reduce();
-    // }
+    void remove(const Iterator& it)
+    {
+        Iterator curr = it;
+        Iterator id_end = end();
+        if (curr == id_end)
+            return;
+        Iterator it_next = ++Iterator(curr);
+        while (it_next != id_end)
+            swap(curr++, it_next++);
+        (*curr).~Element();
+        --m_length;
+        if (m_length <= m_capacity / 2)
+            reduceCapacity();
+    }
 
     void clear()
     {
@@ -207,6 +209,9 @@ public:
 private:
     void setCapacity(Size newCapacity)
     {
+        if (newCapacity == m_capacity)
+            return;
+
         Element* newBuffer = (Element*)operator new (sizeof(Element) * newCapacity);
 
         for (Size i = 0; i < m_length; i++)
@@ -297,7 +302,11 @@ public:
 public:
     class Iterator
     {
+    private:
         friend class Array<T>;
+
+    public:
+        using Element = Element;
 
     public:
         Iterator()                   = default;
@@ -316,8 +325,8 @@ public:
         Iterator& operator = (const Iterator& cp) = default;
         Iterator& operator = (Iterator&& mv)      = default;
 
-        inline Element& operator  * () { return m_arrayRef->m_buffer[m_idx];  };
-        inline Element* operator -> () { return m_arrayRef->m_buffer + m_idx; };
+        inline Element& operator  * () const { return m_arrayRef->m_buffer[m_idx];  };
+        inline Element* operator -> () const { return m_arrayRef->m_buffer + m_idx; };
 
         inline Iterator& operator ++ ()    { ++m_idx; return *this; }
         inline Iterator  operator ++ (int) { Iterator temp(*this); ++m_idx; return temp; }
@@ -327,12 +336,16 @@ public:
         inline bool operator == (const Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
         inline bool operator != (const Iterator& rhs) const { return !(*this == rhs); }
 
-        inline operator Element* () { return m_arrayRef->m_buffer + m_idx; }
+        inline operator Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };
 
     class const_Iterator
     {
+    private:
         friend class Array<T>;
+
+    public:
+        using Element = const Element;
 
     public:
         const_Iterator()                      = default;
@@ -351,8 +364,8 @@ public:
         const_Iterator& operator = (const const_Iterator&) = default;
         const_Iterator& operator = (const_Iterator&&)      = default;
 
-        inline const Element& operator  * () { return m_arrayRef->m_buffer[m_idx];  };
-        inline const Element* operator -> () { return m_arrayRef->m_buffer + m_idx; };
+        inline const Element& operator  * () const { return m_arrayRef->m_buffer[m_idx];  };
+        inline const Element* operator -> () const { return m_arrayRef->m_buffer + m_idx; };
 
         inline const_Iterator& operator ++ ()    { ++m_idx; return *this; }
         inline const_Iterator  operator ++ (int) { const_Iterator temp(*this); ++m_idx; return temp; }
@@ -362,7 +375,7 @@ public:
         inline bool operator == (const const_Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
         inline bool operator != (const const_Iterator& rhs) const { return !(*this == rhs); }
 
-        inline operator const Element* () { return m_arrayRef->m_buffer + m_idx; }
+        inline operator const Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };
 };
 

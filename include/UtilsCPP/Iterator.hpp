@@ -10,24 +10,40 @@
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
-#include <cstring>
-
 #include "UtilsCPP/Types.hpp"
+#include <cstring>
 
 namespace utils
 {
 
-// template<typename Iterator>
-// void swap(const Iterator& ita, const Iterator& itb)
-// {
-//     typename Iterator::Element* temp = (typename Iterator::Element*)operator new (sizeof(typename Iterator::Element));
+template<typename Iterator>
+void swap(const Iterator& ita, const Iterator& itb)
+{
+    typename Iterator::Element* temp = (typename Iterator::Element*)operator new (sizeof(typename Iterator::Element));
 
-//     std::memcpy(temp,                             (typename Iterator::Element*)ita, sizeof(typename Iterator::Element));
-//     std::memcpy((typename Iterator::Element*)ita, (typename Iterator::Element*)itb, sizeof(typename Iterator::Element));
-//     std::memcpy((typename Iterator::Element*)itb, temp,                             sizeof(typename Iterator::Element));
+    std::memcpy(temp,                             (typename Iterator::Element*)ita, sizeof(typename Iterator::Element));
+    std::memcpy((typename Iterator::Element*)ita, (typename Iterator::Element*)itb, sizeof(typename Iterator::Element));
+    std::memcpy((typename Iterator::Element*)itb, temp,                             sizeof(typename Iterator::Element));
 
-//     operator delete (temp);
-// }
+    operator delete (temp);
+}
+
+template<typename Iterator>
+Iterator& operator += (Iterator& it, uint32 n)
+{
+    for (uint32 i = 0; i < n; i++)
+        ++it;
+    return it;
+}
+
+template<typename Iterator>
+Iterator operator + (const Iterator& it, uint32 n)
+{
+    Iterator outuput = it;
+    for (uint32 i = 0; i < n; i++)
+        ++outuput;
+    return outuput;
+}
 
 }
 

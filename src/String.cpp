@@ -10,6 +10,7 @@
 #include "UtilsCPP/String.hpp"
 
 #include <cstring>
+#include <istream>
 
 namespace utils
 {
@@ -25,6 +26,26 @@ String::String(const char *&& literal) : m_characters(literal, literal + (std::s
 String::String(Size length, char c) : m_characters(length + 1, c)
 {
     m_characters.last() = '\0';
+}
+
+String String::contentOf(std::istream& istream)
+{
+    String output;
+
+    int c = istream.get();
+    while (c != std::istream::traits_type::eof())
+    {
+        output.append(c);
+        c = istream.get();
+    }
+
+    return output;
+}
+
+void String::append(char c)
+{
+    m_characters.last() = c;
+    m_characters.append('\0');
 }
 
 }

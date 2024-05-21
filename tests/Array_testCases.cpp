@@ -12,6 +12,7 @@
 
 #include "UtilsCPP/Array.hpp"
 #include "./random.hpp"
+#include "UtilsCPP/Types.hpp"
 
 namespace utils_tests
 {
@@ -359,6 +360,28 @@ TYPED_TEST(ArrayTest, append) { this->test([this]()
         ASSERT_EQ(this->m_array.m_length, prevLength + 1);
         ASSERT_TRUE(this->m_array.m_capacity >= this->m_array.m_length);
         ASSERT_EQ(this->m_array.m_buffer[this->m_array.m_length - 1], newItem);
+    }
+});}
+
+TYPED_TEST(ArrayTest, remove) { this->test([this]()
+{
+    using Array = Array<TypeParam>;
+    using Vector = std::vector<TypeParam>;
+
+    int i = -1;
+    while (++i < 4 && this->m_vector.size() > 0)
+    {
+        utils::uint32 n = this->m_vector.size() == 1 ? 0 : random<int>(0, this->m_vector.size() - 1);
+        typename Array::Iterator arrIt = this->m_array.begin() + n;
+        typename Vector::iterator vecIt = this->m_vector.begin() + n;
+
+        this->m_array.remove(arrIt);
+        this->m_vector.erase(vecIt);
+
+        ASSERT_EQ(this->m_array.m_length, this->m_vector.size());
+
+        for (int i = 0; i < this->m_array.m_length; i++)
+            ASSERT_EQ(this->m_array.m_buffer[i], this->m_vector[i]);
     }
 });}
 
