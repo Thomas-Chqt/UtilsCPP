@@ -14,6 +14,7 @@
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Func.hpp"
 
+#include <initializer_list>
 #include <utility>
 #include <cstring>
 #include <new>
@@ -78,6 +79,18 @@ public:
 
         for (Index i = 0; i < length; i++)
             new (m_buffer + i) Element(val);
+    }
+
+    Array(std::initializer_list<Element> init_list) : m_length(init_list.size())
+    {
+         while (m_capacity < m_length)
+            m_capacity *= 2;
+        
+        m_buffer = (Element*)operator new (sizeof(Element) * m_capacity);
+
+        Index i = 0;
+        for (const auto& elem : init_list)
+            new (m_buffer + i++) Element(elem);
     }
 
     inline bool isEmpty()  const { return m_length == 0; }
