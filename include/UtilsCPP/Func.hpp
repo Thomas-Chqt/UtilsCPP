@@ -138,7 +138,7 @@ public:
         return *this;
     }
 
-    inline operator bool () { return m_callable != nullptr; }
+    inline operator bool () const { return m_callable != nullptr; }
 };
 
 }
