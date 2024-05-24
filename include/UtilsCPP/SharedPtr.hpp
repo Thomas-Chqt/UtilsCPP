@@ -16,8 +16,14 @@
 namespace utils
 {
 
+class SharedPtrBase
+{
+public:
+    virtual ~SharedPtrBase() = default;
+};
+
 template<typename T>
-class SharedPtr
+class SharedPtr : public SharedPtrBase
 {
 private:
     template<typename Y> friend class SharedPtr;
