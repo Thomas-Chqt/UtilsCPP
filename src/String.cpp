@@ -11,6 +11,7 @@
 
 #include <cstring>
 #include <istream>
+#include <fstream>
 
 namespace utils
 {
@@ -40,6 +41,12 @@ String String::contentOf(std::istream& istream)
     }
 
     return output;
+}
+
+String String::contentOfFile(const std::string& path)
+{
+    std::ifstream ifstream(path);
+    return String::contentOf(ifstream);
 }
 
 void String::append(char c)
