@@ -10,6 +10,7 @@
 #ifndef ARRAY_HPP
 # define ARRAY_HPP
 
+#include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/Iterator.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Func.hpp"
@@ -25,6 +26,9 @@ namespace utils
 template <typename T>
 class Array
 {
+public:
+    struct OutOfBoundError : public Error { inline const char* description() const override { return "Out of bound access"; } };
+
 public:
     using Element  = T;
     using Size     = uint64;
@@ -205,8 +209,8 @@ public:
         m_buffer = (Element*)operator new (sizeof(Element) * m_capacity);
     }
 
-    inline       Element& last()       { return m_buffer[m_length - 1]; }
-    inline const Element& last() const { return m_buffer[m_length - 1]; }
+    inline       Element& last()        { return m_buffer[m_length - 1]; }
+    inline const Element& last()  const { return m_buffer[m_length - 1]; }
     inline       Element& first()       { return m_buffer[0]; }
     inline const Element& first() const { return m_buffer[0]; }
 
@@ -290,8 +294,19 @@ public:
         return *this;
     }
 
-    inline       Element& operator [] (Index idx)       { return m_buffer[idx]; } //TODO : Add throw
-    inline const Element& operator [] (Index idx) const { return m_buffer[idx]; } //TODO : Add throw
+    Element& operator [] (Index idx)
+    {
+        if (idx >= m_length)
+            throw OutOfBoundError();
+        return m_buffer[idx];
+    }
+
+    const Element& operator [] (Index idx) const
+    {
+        if (idx >= m_length)
+            throw OutOfBoundError();
+        return m_buffer[idx];
+    }
 
     bool operator == (const Array& rhs) const
     {

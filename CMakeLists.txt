@@ -22,11 +22,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 option(UTILSCPP_BUILD_TESTS "Build utils cpp test executables" OFF)
 
-if(BUILD_SHARED_LIBS)
-    add_library(UtilsCPP SHARED)
-else()
-    add_library(UtilsCPP STATIC)
-endif()
+add_library(UtilsCPP)
 
 file(GLOB_RECURSE UTILSCPP_SRC "src/*.cpp" "src/*.tpp" "include/*.tpp" "src/*.hpp" "include/*.hpp")
 target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})

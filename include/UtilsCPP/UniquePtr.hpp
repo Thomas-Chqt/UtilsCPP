@@ -10,12 +10,18 @@
 #ifndef UNIQUEPTR_HPP
 # define UNIQUEPTR_HPP
 
+#include "UtilsCPP/Error.hpp"
+
 namespace utils
 {
 
 template<typename T>
 class UniquePtr
 {
+public:
+    struct NullPointerError : public Error { inline const char* description() const override { return "Dereferencing a null pointer"; } };
+
+private:
     template<typename Y> friend class UniquePtr;
 
 public:
@@ -77,7 +83,13 @@ public:
         return *this;
     }
 
-    inline Type& operator  * () const { return *m_pointer; } // TODO add throw
+    Type& operator  * () const
+    {
+        if (m_pointer == nullptr)
+            throw NullPointerError();
+        return *m_pointer;
+    }
+
     inline Type* operator -> () const { return  m_pointer; }
 
     inline operator T* () const { return m_pointer; }

@@ -11,6 +11,7 @@
 # define DICTIONARY_HPP
 
 #include "UtilsCPP/Array.hpp"
+#include "UtilsCPP/Error.hpp"
 #include <algorithm>
 #include <cstdlib>
 
@@ -20,6 +21,10 @@ namespace utils
 template<typename Key, typename Value>
 class Dictionary
 {
+public:
+    struct DuplicateKeyError : public Error { inline const char* description() const override { return "Key already in the dictionary"; } };
+    struct KeyNoFoundError : public Error { inline const char* description() const override { return "Key not in the dictionary"; } };
+
 private:
     struct KeyValPair
     {
@@ -43,14 +48,14 @@ public:
     void insert(const Key& key, const Value& val)
     {
         if (m_data.contain(key))
-            std::abort(); // TODO use throw
+            throw DuplicateKeyError();
         m_data.append((KeyValPair){ Key(key), Value(val) });
     }
 
     void insert(const Key& key, Value&& val)
     {
         if (m_data.contain(key))
-            std::abort(); // TODO use throw
+            throw DuplicateKeyError();
         m_data.append((KeyValPair){ Key(key), Value(std::move(val)) });
     }
 
@@ -74,7 +79,7 @@ public:
         typename DataStructure::Iterator it = m_data.find(key);
 
         if (it == m_data.end())
-            std::abort(); // TODO use throw
+            throw KeyNoFoundError();
 
         return it->val;
     }
@@ -84,7 +89,7 @@ public:
         typename DataStructure::const_Iterator it = m_data.find(key);
 
         if (it == m_data.end())
-            std::abort(); // TODO use throw
+            throw KeyNoFoundError();
 
         return it->val;
     }

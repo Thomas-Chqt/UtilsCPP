@@ -65,8 +65,8 @@ public:
     inline bool operator == (const String& rhs) const { return m_characters == rhs.m_characters; }
     inline bool operator != (const String& rhs) const { return m_characters != rhs.m_characters; };
 
-    inline       char& operator [] (Index idx)       { return m_characters[idx]; }; //TODO : Add throw
-    inline const char& operator [] (Index idx) const { return m_characters[idx]; }; //TODO : Add throw
+    inline       char& operator [] (Index idx)       { return m_characters[idx]; };
+    inline const char& operator [] (Index idx) const { return m_characters[idx]; };
 
     inline operator       char* ()       { return (      char*)m_characters; }
     inline operator const char* () const { return (const char*)m_characters; }

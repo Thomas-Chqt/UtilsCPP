@@ -21,6 +21,7 @@ target_sources(UtilsCPP_test PRIVATE ${UTILSCPP_TEST_SRC})
 
 target_include_directories(UtilsCPP_test PRIVATE ".")
 
+set(BUILD_GMOCK OFF)
 FetchContent_MakeAvailable(googletest)
 target_link_libraries(UtilsCPP_test UtilsCPP GTest::gtest_main)
 
