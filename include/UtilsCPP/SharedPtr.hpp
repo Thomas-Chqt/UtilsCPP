@@ -13,6 +13,7 @@
 #include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/Types.hpp"
 #include <ostream>
+#include "UtilsCPP/UniquePtr.hpp"
 
 namespace utils
 {
@@ -28,6 +29,7 @@ class SharedPtr : public SharedPtrBase
 {
 public:
     struct NullPointerError : public Error { inline const char* description() const override { return "Dereferencing a null pointer"; } };
+    struct NotUniqueError : public Error { inline const char* description() const override { return "Not the unique owner of the pointer"; } };
 
 private:
     template<typename Y> friend class SharedPtr;
@@ -85,6 +87,19 @@ public:
             *output.m_refCount += 1;
 
         return output;
+    }
+
+    UniquePtr<Type> makeUnique()
+    {
+        if (m_refCount != nullptr)
+        {
+            if (*m_refCount > 1)
+                throw NotUniqueError();
+        }
+        UniquePtr<Type> uniPtr(m_pointer);
+        m_pointer = nullptr;
+        m_refCount = nullptr;
+        return uniPtr;
     }
 
     void clear()

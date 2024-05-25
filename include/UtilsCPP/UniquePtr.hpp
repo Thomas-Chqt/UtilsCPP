@@ -51,6 +51,13 @@ public:
         return output;
     }
 
+    Type* getOwnership()
+    {
+        Type* tmp = m_pointer;
+        m_pointer = nullptr;
+        return tmp;
+    }
+
     void clear()
     {
         delete m_pointer;
