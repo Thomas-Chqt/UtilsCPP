@@ -10,6 +10,8 @@
 #ifndef FUNC_HPP
 # define FUNC_HPP
 
+#include "UtilsCPP/SharedPtr.hpp"
+
 namespace utils
 {
 
@@ -24,7 +26,6 @@ private:
     {
     public:
         virtual ReturnValue call(Args...) const = 0;
-        virtual ICallable* clone() const = 0;
         virtual ~ICallable() = default;
     };
 
@@ -40,7 +41,6 @@ private:
         CallableF(F&& f) : m_f((F&&)f) {}
 
         inline ReturnValue call(Args... args) const override { return m_f(args...); }
-        ICallable* clone() const override { return new CallableF(m_f); }
 
         ~CallableF() override = default;
 
@@ -58,7 +58,6 @@ private:
         CallablePTR(ReturnValue (*f)(Args... args)) : m_f(f) {}
 
         inline ReturnValue call(Args... args) const override { return m_f(args...); }
-        ICallable* clone() const override { return new CallablePTR(m_f); }
 
         ~CallablePTR() override = default;
 
@@ -77,7 +76,6 @@ private:
         CallableMEM(Object& obj, ReturnValue (Object::*f)(Args... args)) : m_obj(obj), m_f(f) {}
 
         inline ReturnValue call(Args... args) const override { return (m_obj.*m_f)(args...); }
-        ICallable* clone() const override { return new CallableMEM(m_obj, m_f); }
 
         ~CallableMEM() override = default;
 
@@ -87,16 +85,9 @@ private:
     };
 
 public:
-    Func() = default;
-
-    Func(const Func& cp) : m_callable(cp.m_callable->clone())
-    {
-    }
-
-    Func(Func&& mv) : m_callable(mv.m_callable)
-    {
-        mv.m_callable = nullptr;
-    }
+    Func()               = default;
+    Func(const Func& cp) = default;
+    Func(Func&& mv)      = default;
 
     template <typename F>
     Func(const F& f) : m_callable(new CallableF<F>(f))
@@ -112,33 +103,17 @@ public:
     {
     }
 
-    ~Func()
-    {
-        delete m_callable;
-    }
+    ~Func() = default;
 
 private:
-    ICallable* m_callable = nullptr; // TODO use unique pointer ? (maybe a shared pointer)
+    SharedPtr<ICallable> m_callable;
 
 public:
+    Func& operator = (const Func& rhs) = default;
+    Func& operator = (Func&& rhs) = default;
+
     inline ReturnValue operator () (Args... args) const { return m_callable->call(args...); }
-
-    Func& operator = (const Func& rhs)
-    {
-        delete m_callable;
-        m_callable = rhs.m_callable->clone();
-        return *this;
-    }
-
-    Func& operator = (Func&& rhs)
-    {
-        delete m_callable;
-        m_callable = rhs.m_callable;
-        rhs.m_callable = nullptr;
-        return *this;
-    }
-
-    inline operator bool () const { return m_callable != nullptr; }
+    inline operator bool () const { return (bool)m_callable; }
 };
 
 }
