@@ -1,0 +1,58 @@
+name: Continuous Integration
+run-name: Multi platform build and test for ${{ github.ref }} by ${{ github.actor }}
+on:
+  pull_request_target:
+    branches: [ $default-branch ]
+
+jobs:
+  Build-and-Test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:       [ macos-latest, ubuntu-latest ]
+        compiler: [ clang, clang-13, clang-14, clang-15, gcc-10, gcc-11, gcc-12 ]
+            
+        include:
+          - os: windows-latest
+            compiler: clang
+
+          - os: windows-latest
+            compiler: gcc
+
+          - os: ubuntu-latest
+            compiler: gcc
+
+        exclude:
+          - os: macos-latest
+            compiler: clang-13
+
+          - os: macos-latest
+            compiler: clang-14
+
+          - os: macos-latest
+            compiler: gcc-10
+          
+        
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get compiler path
+        id: get-path
+        uses: Thomas-Chqt/Get-Compiler-Path@master
+        with:
+          compiler: ${{ matrix.compiler }}
+      
+      - name: Configure CMake
+        run: > 
+          cmake -B build -S ${{ github.workspace }}
+          -DCMAKE_BUILD_TYPE=Release
+          -DUTILSCPP_INCLUDE_TESTS=ON
+          -DCMAKE_C_COMPILER=${{ steps.get-path.outputs.c-path }}
+          -DCMAKE_CXX_COMPILER=${{ steps.get-path.outputs.cpp-path }}
+          
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: build
+        run: GTEST_COLOR=1 ctest --output-on-failure
