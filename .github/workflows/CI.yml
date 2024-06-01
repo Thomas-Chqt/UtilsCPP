@@ -9,28 +9,33 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:       [ macos-latest, ubuntu-latest ]
-        compiler: [ clang-13, clang-14, clang-15, gcc-10, gcc-11, gcc-12 ]
+        os: [ macos-latest, ubuntu-latest, ]
+        compiler: [ clang, gcc ]
             
         include:
-          - os: windows-latest
+          - os: macos-latest
             compiler: clang
-
-          - os: windows-latest
+            c_compiler: $(brew --prefix llvm@15)/bin/clang
+            cpp_compiler: $(brew --prefix llvm@15)/bin/clang++
+            
+          - os: macos-latest
             compiler: gcc
-
-          - os: macos-latest
+            c_compiler: gcc-13
+            cpp_compiler: g++-13
+            
+          - os: ubuntu-latest
             compiler: clang
+            c_compiler: clang-15
+            cpp_compiler: clang++-15
+            
+          - os: ubuntu-latest
+            compiler: gcc
+            c_compiler: gcc
+            cpp_compiler: g++
 
-        exclude:
-          - os: macos-latest
-            compiler: clang-13
-
-          - os: macos-latest
-            compiler: clang-14
-
-          - os: macos-latest
-            compiler: gcc-10
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
           
         
     runs-on: ${{ matrix.os }}
