@@ -11,6 +11,7 @@
 
 #include "UtilsCPP/String.hpp"
 #include "./random.hpp"
+#include <cstring>
 
 namespace utils_tests
 {

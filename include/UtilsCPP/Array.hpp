@@ -17,7 +17,6 @@
 
 #include <initializer_list>
 #include <utility>
-#include <cstring>
 #include <new>
 
 namespace utils
@@ -334,7 +333,7 @@ public:
         friend class Array<T>;
 
     public:
-        using Element = Element;
+        using Element = T;
 
     public:
         Iterator()                   = default;
@@ -373,7 +372,7 @@ public:
         friend class Array<T>;
 
     public:
-        using Element = const Element;
+        using Element = const T;
 
     public:
         const_Iterator()                      = default;
