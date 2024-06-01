@@ -3,6 +3,8 @@ run-name: Multi platform build and test for ${{ github.ref }} by ${{ github.acto
 on:
   pull_request_target:
     branches: [ $default-branch ]
+  push:
+    branches-ignore: []
 
 jobs:
   Build-and-Test:
@@ -41,19 +43,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Get compiler path
-        id: get-path
-        uses: Thomas-Chqt/Get-Compiler-Path@master
-        with:
-          compiler: ${{ matrix.compiler }}
       
       - name: Configure CMake
         run: > 
           cmake -B build -S ${{ github.workspace }}
           -DCMAKE_BUILD_TYPE=Release
           -DUTILSCPP_INCLUDE_TESTS=ON
-          -DCMAKE_C_COMPILER=${{ steps.get-path.outputs.c-path }}
-          -DCMAKE_CXX_COMPILER=${{ steps.get-path.outputs.cpp-path }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           
       - name: Build
         run: cmake --build build
