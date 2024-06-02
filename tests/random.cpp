@@ -9,6 +9,8 @@
 
 #include "./random.hpp"
 
+#include <climits>
+
 namespace utils_tests
 {
 

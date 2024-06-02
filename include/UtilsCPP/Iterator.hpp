@@ -11,7 +11,6 @@
 # define ITERATOR_HPP
 
 #include "UtilsCPP/Types.hpp"
-#include <cstring>
 
 namespace utils
 {
@@ -19,13 +18,9 @@ namespace utils
 template<typename Iterator>
 void swap(const Iterator& ita, const Iterator& itb)
 {
-    typename Iterator::Element* temp = (typename Iterator::Element*)operator new (sizeof(typename Iterator::Element));
-
-    std::memcpy(temp,                             (typename Iterator::Element*)ita, sizeof(typename Iterator::Element));
-    std::memcpy((typename Iterator::Element*)ita, (typename Iterator::Element*)itb, sizeof(typename Iterator::Element));
-    std::memcpy((typename Iterator::Element*)itb, temp,                             sizeof(typename Iterator::Element));
-
-    operator delete (temp);
+    typename Iterator::Element temp = *ita;
+    *ita = *itb;
+    *itb = temp;
 }
 
 template<typename Iterator>
