@@ -67,4 +67,6 @@ jobs:
 
       - name: Test
         working-directory: build
-        run: GTEST_COLOR=1 ctest --output-on-failure
+        run: ctest --output-on-failure
+        env:
+          GTEST_COLOR: 1
