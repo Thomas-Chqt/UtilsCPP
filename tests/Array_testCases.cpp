@@ -36,7 +36,7 @@ public:
     void test(const Y& fn)
     {
         struct data { Size length; Size capacity; };
-        for (data input : {(data){0, 1}, (data){1, 2}, (data){3, 4}, (data){128, 255}, (data){3152, 3152}})
+        for (data input : {data{0, 1}, data{1, 2}, data{3, 4}, data{128, 255}, data{3152, 3152}})
         {
             m_array.m_length = input.length;
             m_array.m_capacity = input.capacity;
@@ -400,7 +400,7 @@ TYPED_TEST(ArrayTest, copyAssignementOperator) { this->test([this]()
     using Element = typename Array::Element;
 
     struct data { Size length; Size capacity; };
-    for (data input : {(data){0, 1}, (data){1, 2}, (data){3, 4}, (data){128, 255}, (data){3152, 3152}})
+    for (data input : std::vector<data>({data{0, 1}, data{1, 2}, data{3, 4}, data{128, 255}, data{3152, 3152}}))
     {
         {
             unsigned char bytes[sizeof(Array)] = {};
@@ -464,7 +464,7 @@ TYPED_TEST(ArrayTest, moveAssignementOperator) { this->test([this]()
     using Element = typename Array::Element;
 
     struct data { Size length; Size capacity; };
-    for (data input : {(data){0, 1}, (data){1, 2}, (data){3, 4}, (data){128, 255}, (data){3152, 3152}})
+    for (data input : {data{0, 1}, data{1, 2}, data{3, 4}, data{128, 255}, data{3152, 3152}})
     {
         unsigned char bytes[sizeof(Array)] = {};
         Array& array = *reinterpret_cast<Array*>(bytes);
@@ -502,7 +502,7 @@ TYPED_TEST(ArrayTest, equalOperator) { this->test([this]()
     using Element = typename Array::Element;
 
     struct data { Size length; Size capacity; };
-    for (data input : {(data){0, 1}, (data){1, 2}, (data){3, 4}, (data){128, 255}, (data){3152, 3152}})
+    for (data input : {data{0, 1}, data{1, 2}, data{3, 4}, data{128, 255}, data{3152, 3152}})
     {
         unsigned char bytes[sizeof(Array)] = {};
         Array& array = *reinterpret_cast<Array*>(bytes);

@@ -49,14 +49,14 @@ public:
     {
         if (m_data.contain(key))
             throw DuplicateKeyError();
-        m_data.append((KeyValPair){ Key(key), Value(val) });
+        m_data.append(KeyValPair{ Key(key), Value(val) });
     }
 
     void insert(const Key& key, Value&& val)
     {
         if (m_data.contain(key))
             throw DuplicateKeyError();
-        m_data.append((KeyValPair){ Key(key), Value(std::move(val)) });
+        m_data.append(KeyValPair{ Key(key), Value(std::move(val)) });
     }
 
     void remove(const Key& key)
