@@ -55,4 +55,12 @@ void String::append(char c)
     m_characters.append('\0');
 }
 
+String operator + (const String& s1, const String& s2)
+{
+    String output(s1.length() + s2.length());
+    std::memcpy(&output[0],           (const char*)s1, s1.length());
+    std::memcpy(&output[s1.length()], (const char*)s2, s2.length());
+    return output;
+}
+
 }
