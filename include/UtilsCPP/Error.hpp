@@ -11,17 +11,19 @@
 # define ERROR_HPP
 
 #include <ostream>
+#include <exception>
 
 namespace utils
 {
 
-class Error
+class Error : public std::exception
 {
 public:
     Error(const Error&) = default;
     Error(Error&&)      = default;
 
     virtual const char* description() const = 0;
+    inline const char* what() const noexcept override { return description(); };
     
     virtual ~Error() = default;
 

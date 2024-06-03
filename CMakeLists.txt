@@ -5,7 +5,7 @@
 # Date: 2024/04/22 13:35:56
 # ---------------------------------------------------
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.16)
 
 option(BUILD_SHARED_LIBS       "Build using shared libraries"               OFF)
 option(UTILSCPP_IN_PARENT_PROJ "Add UtilsCPP library to the parend project" ON)
