@@ -94,4 +94,13 @@ TEST_P(String, literalConstructor)
     ::operator delete (string.m_characters.m_buffer);
 }
 
+TEST(StringTest, plusOperator)
+{
+    utils::String str1 = "hello";
+    utils::String str2 = " ";
+    utils::String str3 = "world";
+    
+    EXPECT_EQ(str1 + str2 + str3, utils::String("hello world"));
+}
+
 }

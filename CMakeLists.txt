@@ -5,19 +5,12 @@
 # Date: 2024/04/22 13:35:56
 # ---------------------------------------------------
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.16)
 
-option(BUILD_SHARED_LIBS       "Build using shared libraries"               OFF)
-option(UTILSCPP_IN_PARENT_PROJ "Add UtilsCPP library to the parend project" ON)
-option(UTILSCPP_INCLUDE_TESTS  "Inlcude UtilsCPP tests in the project"      OFF)
+option(BUILD_SHARED_LIBS      "Build using shared libraries"          OFF)
+option(UTILSCPP_INCLUDE_TESTS "Inlcude UtilsCPP tests in the project" OFF)
 
-
-enable_language(CXX)
-
-get_directory_property(HAS_PARENT PARENT_DIRECTORY)
-if(NOT UTILSCPP_IN_PARENT_PROJ OR NOT HAS_PARENT)
-    project(UtilsCPP)
-endif()
+project(UtilsCPP CXX)
 
 add_library(UtilsCPP)
 
