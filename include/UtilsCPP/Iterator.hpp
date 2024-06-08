@@ -11,6 +11,7 @@
 # define ITERATOR_HPP
 
 #include "UtilsCPP/Types.hpp"
+#include <algorithm>
 
 namespace utils
 {
@@ -18,9 +19,9 @@ namespace utils
 template<typename Iterator>
 void swap(const Iterator& ita, const Iterator& itb)
 {
-    typename Iterator::Element temp = *ita;
-    *ita = *itb;
-    *itb = temp;
+    typename Iterator::Element temp = std::move(*ita);
+    *ita = std::move(*itb);
+    *itb = std::move(temp);
 }
 
 template<typename Iterator>
