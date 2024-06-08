@@ -1,8 +1,7 @@
 name: Continuous Integration
 run-name: Multi platform build and test for ${{ github.ref }} by ${{ github.actor }}
 on:
-  pull_request_target:
-    branches: [ $default-branch ]
+  pull_request:
   workflow_dispatch:
 
 jobs:
