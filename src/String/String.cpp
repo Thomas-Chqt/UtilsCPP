@@ -43,9 +43,9 @@ String String::contentOf(std::istream& istream)
     return output;
 }
 
-String String::contentOfFile(const std::string& path)
+String String::contentOfFile(const String& path)
 {
-    std::ifstream ifstream(path);
+    std::ifstream ifstream(std::string((const char*)path));
     return String::contentOf(ifstream);
 }
 
