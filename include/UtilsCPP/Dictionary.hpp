@@ -67,6 +67,8 @@ public:
         m_data.remove(it);
     }
 
+    inline void clear() { m_data.clear(); }
+
 private:
     DataStructure m_data;
 
