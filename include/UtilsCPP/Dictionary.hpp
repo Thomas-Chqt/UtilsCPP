@@ -43,7 +43,7 @@ public:
     Dictionary(const Dictionary&) = default;
     Dictionary(Dictionary&&)      = default;
 
-    inline bool contain(const Key& key) const { return m_data.contain(key); }
+    inline bool contain(const Key& key) const { return m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }); }
     inline Size size() const { return m_data.length(); }
 
     inline       Iterator begin()       { return m_data.begin(); }
@@ -53,14 +53,14 @@ public:
 
     void insert(const Key& key, const Value& val)
     {
-        if (m_data.contain(key))
+        if (m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }))
             throw DuplicateKeyError();
         m_data.append(KeyValPair{ Key(key), Value(val) });
     }
 
     void insert(const Key& key, Value&& val)
     {
-        if (m_data.contain(key))
+        if (m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }))
             throw DuplicateKeyError();
         m_data.append(KeyValPair{ Key(key), Value(std::move(val)) });
     }
