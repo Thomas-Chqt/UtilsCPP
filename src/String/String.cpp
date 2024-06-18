@@ -55,6 +55,22 @@ void String::append(char c)
     m_characters.append('\0');
 }
 
+String::Index String::lastIndexOf(char c) const
+{
+    Index idx = length() - 1;
+    while (m_characters[idx] != c)
+        idx--;
+    return idx;
+}
+
+String String::substr(Index start, Size len) const
+{
+    String newStr(len, '\0');
+    for (Index idx = 0; idx < len; idx++)
+        newStr[idx] = m_characters[start + idx];
+    return newStr;
+}
+
 String operator + (const String& s1, const String& s2)
 {
     String output(s1.length() + s2.length());

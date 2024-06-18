@@ -49,6 +49,9 @@ public:
 
     void append(char c);
 
+    Index lastIndexOf(char c) const;
+    String substr(Index start, Size len) const;
+
     ~String() = default;
 
 #ifdef GOOGLETEST_INCLUDE_GTEST_GTEST_H_
