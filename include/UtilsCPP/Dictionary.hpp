@@ -75,6 +75,13 @@ public:
 
     inline void clear() { m_data.clear(); }
 
+    Value& get(const Key& key, const Value& deff = Value())
+    {
+        if (contain(key) == false)
+            insert(key, deff);
+        return operator[](key);
+    }
+
 private:
     DataStructure m_data;
 
