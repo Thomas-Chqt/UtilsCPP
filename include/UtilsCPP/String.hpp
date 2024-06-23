@@ -36,6 +36,7 @@ public:
     
     static String contentOf(std::istream&);
     static String contentOfFile(const String& path);
+    static String fromUInt(uint32);
 
     inline Size length()   const { return m_characters.length() - 1; }
     inline Size capacity() const { return m_characters.capacity(); } // capacity include the \0 character 
