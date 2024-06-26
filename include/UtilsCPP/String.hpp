@@ -31,7 +31,7 @@ public:
     String(const String&) = default;
     String(String&&)      = default;
 
-    String(const char *&& literal);
+    String(const char* literal);
     String(Size length, char c = '\0');
     
     static String contentOf(std::istream&);

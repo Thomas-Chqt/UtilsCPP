@@ -21,7 +21,7 @@ String::String() : m_characters(1, '\0')
 {
 }
 
-String::String(const char *&& literal) : m_characters(literal, literal + (std::strlen(literal) + 1))
+String::String(const char* literal) : m_characters(literal, literal + (std::strlen(literal) + 1))
 {
 }
 
