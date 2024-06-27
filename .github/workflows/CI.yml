@@ -56,7 +56,7 @@ jobs:
         run: > 
           cmake -B build -S ${{ github.workspace }}
           -DCMAKE_BUILD_TYPE=Release
-          -DUTILSCPP_INCLUDE_TESTS=ON
+          -DUTILSCPP_BUILD_TESTS=ON
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           

@@ -8,7 +8,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 option(BUILD_SHARED_LIBS      "Build using shared libraries"          OFF)
-option(UTILSCPP_INCLUDE_TESTS "Inlcude UtilsCPP tests in the project" OFF)
+option(UTILSCPP_BUILD_TESTS "Inlcude UtilsCPP tests in the project" OFF)
 
 project(UtilsCPP)
 
@@ -25,7 +25,7 @@ target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})
 
 target_include_directories(UtilsCPP PRIVATE "src" PUBLIC "include")
 
-if (UTILSCPP_INCLUDE_TESTS)
+if (UTILSCPP_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()

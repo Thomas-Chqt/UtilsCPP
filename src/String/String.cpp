@@ -8,6 +8,7 @@
  */
 
 #include "UtilsCPP/String.hpp"
+#include "UtilsCPP/Types.hpp"
 
 #include <cstring>
 #include <istream>
@@ -20,7 +21,7 @@ String::String() : m_characters(1, '\0')
 {
 }
 
-String::String(const char *&& literal) : m_characters(literal, literal + (std::strlen(literal) + 1))
+String::String(const char* literal) : m_characters(literal, literal + (std::strlen(literal) + 1))
 {
 }
 
@@ -47,6 +48,13 @@ String String::contentOfFile(const String& path)
 {
     std::ifstream ifstream(std::string((const char*)path));
     return String::contentOf(ifstream);
+}
+
+String String::fromUInt(uint32 nbr)
+{
+    if (nbr / 10 == 0)
+        return String(1, (char)(nbr + '0'));
+    return String::fromUInt(nbr / 10) + String(1, (char)(nbr % 10 + '0'));
 }
 
 void String::append(char c)

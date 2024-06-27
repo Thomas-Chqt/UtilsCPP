@@ -103,4 +103,12 @@ TEST(StringTest, plusOperator)
     EXPECT_EQ(str1 + str2 + str3, utils::String("hello world"));
 }
 
+TEST(StringTest, fromUInt)
+{
+    EXPECT_EQ(utils::String::fromUInt(123), utils::String("123"));
+    EXPECT_EQ(utils::String::fromUInt(123456765), utils::String("123456765"));
+    EXPECT_EQ(utils::String::fromUInt(65434), utils::String("65434"));
+    EXPECT_EQ(utils::String::fromUInt(0), utils::String("0"));
+}
+
 }
