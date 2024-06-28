@@ -33,6 +33,8 @@ public:
 
     String(const char* literal);
     String(Size length, char c = '\0');
+    String(const Array<char>&);
+    String(Array<char>&&);
     
     static String contentOf(std::istream&);
     static String contentOfFile(const String& path);

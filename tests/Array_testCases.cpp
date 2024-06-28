@@ -531,4 +531,13 @@ TYPED_TEST(ArrayTest, equalOperator) { this->test([this]()
     }
 });}
 
+TEST(ArrayTest, appendIterator)
+{
+    Array<char> array = {'a', 'b', 'c'};
+    const char* str = "123";
+    
+    EXPECT_EQ(*array.append(str, str+3), '1');
+    EXPECT_EQ(array, Array<char>({'a', 'b', 'c', '1', '2', '3'}));
+}
+
 }

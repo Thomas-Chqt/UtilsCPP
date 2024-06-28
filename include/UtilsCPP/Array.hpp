@@ -16,6 +16,7 @@
 #include "UtilsCPP/Func.hpp"
 
 #include <initializer_list>
+#include <iterator>
 #include <utility>
 #include <new>
 
@@ -55,15 +56,8 @@ public:
     template<typename Iterator>
     Array(const Iterator& begin, const Iterator& end)
     {
-        m_length = 0;
-        m_capacity = 1;
-
-        for (Iterator it = begin; it != end; ++it)
-        {
-            m_length += 1;
-            if (m_length > m_capacity)
-                m_capacity *= 2;
-        }
+        m_length = std::distance(begin, end);
+        m_capacity = m_length;
         
         m_buffer = (Element*)operator new (sizeof(Element) * m_capacity);
 
@@ -178,6 +172,22 @@ public:
         new (m_buffer + m_length) Element(std::move(element));
         ++m_length;
         return Iterator(*this, m_length - 1);
+    }
+
+    template<typename Iterator>
+    Array::Iterator append(const Iterator& begin, const Iterator& end)
+    {
+        uint32 inputLen = std::distance(begin, end);
+        uint64 newCapacity = m_capacity;
+        while (newCapacity < m_length + inputLen)
+            newCapacity *= 2;
+        setCapacity(newCapacity);
+        Iterator curr = begin;
+        Index idx = m_length;
+        for (; curr != end; ++curr, idx++)
+            new (m_buffer + idx) Element(*curr);
+        m_length += inputLen;
+        return Array::Iterator(*this, m_length - inputLen);
     }
 
     void remove(const Iterator& it)
@@ -354,6 +364,9 @@ public:
 
         inline Element& operator  * () const { return m_arrayRef->m_buffer[m_idx];  };
         inline Element* operator -> () const { return m_arrayRef->m_buffer + m_idx; };
+
+        inline Iterator operator + (int n) { return Iterator(*m_arrayRef, m_idx + n); }
+        inline Iterator operator - (int n) { return Iterator(*m_arrayRef, m_idx - n); }
 
         inline Iterator& operator ++ ()    { ++m_idx; return *this; }
         inline Iterator  operator ++ (int) { Iterator temp(*this); ++m_idx; return temp; }

@@ -8,11 +8,13 @@
  */
 
 #include "UtilsCPP/String.hpp"
+#include "UtilsCPP/Array.hpp"
 #include "UtilsCPP/Types.hpp"
 
 #include <cstring>
 #include <istream>
 #include <fstream>
+#include <utility>
 
 namespace utils
 {
@@ -28,6 +30,14 @@ String::String(const char* literal) : m_characters(literal, literal + (std::strl
 String::String(Size length, char c) : m_characters(length + 1, c)
 {
     m_characters.last() = '\0';
+}
+
+String::String(const Array<char>& arr) : m_characters(arr)
+{
+}
+
+String::String(Array<char>&& arr) : m_characters(std::move(arr))
+{
 }
 
 String String::contentOf(std::istream& istream)
@@ -81,10 +91,9 @@ String String::substr(Index start, Size len) const
 
 String operator + (const String& s1, const String& s2)
 {
-    String output(s1.length() + s2.length());
-    std::memcpy(&output[0],           (const char*)s1, s1.length());
-    std::memcpy(&output[s1.length()], (const char*)s2, s2.length());
-    return output;
+    Array<char> characters((const char*)s1, (const char*)s1 + s1.length());
+    characters.append((const char*)s2, (const char*)s2 + s2.length() + 1);
+    return String(std::move(characters));
 }
 
 }

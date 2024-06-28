@@ -9,9 +9,11 @@
 
 #include <gtest/gtest.h>
 
+#include "UtilsCPP/Array.hpp"
 #include "UtilsCPP/String.hpp"
 #include "./random.hpp"
 #include <cstring>
+#include <utility>
 
 namespace utils_tests
 {
@@ -109,6 +111,13 @@ TEST(StringTest, fromUInt)
     EXPECT_EQ(utils::String::fromUInt(123456765), utils::String("123456765"));
     EXPECT_EQ(utils::String::fromUInt(65434), utils::String("65434"));
     EXPECT_EQ(utils::String::fromUInt(0), utils::String("0"));
+}
+
+TEST(StringTest, ArrayContructor)
+{
+    utils::Array<char> arr = { 'a', 'b', 'c', 'd', 'e', '\0' };
+    EXPECT_EQ(utils::String(arr), utils::String("abcde"));
+    EXPECT_EQ(utils::String(std::move(arr)), utils::String("abcde"));
 }
 
 }
