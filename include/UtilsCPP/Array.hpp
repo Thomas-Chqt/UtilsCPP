@@ -213,16 +213,6 @@ public:
     inline       Element& first()       { return m_buffer[0]; }
     inline const Element& first() const { return m_buffer[0]; }
 
-    ~Array()
-    {
-        if (m_buffer == nullptr)
-            return;
-        for (Size i = 0; i < m_length; ++i)
-            m_buffer[i].~Element();
-        operator delete (m_buffer);
-    }
-
-private:
     void setCapacity(Size newCapacity)
     {
         if (newCapacity == m_capacity)
@@ -239,6 +229,16 @@ private:
         m_capacity = newCapacity;
     }
 
+    ~Array()
+    {
+        if (m_buffer == nullptr)
+            return;
+        for (Size i = 0; i < m_length; ++i)
+            m_buffer[i].~Element();
+        operator delete (m_buffer);
+    }
+
+private:
     inline void extendCapacity() { setCapacity(m_capacity * 2); }
     inline void reduceCapacity() { setCapacity(m_capacity / 2 > 0 ? m_capacity / 2 : 1); }
 
