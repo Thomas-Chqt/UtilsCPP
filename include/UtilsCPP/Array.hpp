@@ -221,7 +221,10 @@ public:
         Element* newBuffer = (Element*)operator new (sizeof(Element) * newCapacity);
 
         for (Size i = 0; i < m_length; i++)
+        {
             new (newBuffer + i) Element(std::move(m_buffer[i]));
+            m_buffer[i].~Element();
+        }
 
         operator delete (m_buffer);
 
