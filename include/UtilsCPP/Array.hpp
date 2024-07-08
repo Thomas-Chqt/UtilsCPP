@@ -84,7 +84,7 @@ public:
             new (m_buffer + i) Element(val);
     }
 
-    Array(std::initializer_list<Element> init_list) : m_length(init_list.size())
+    Array(const std::initializer_list<Element>& init_list) : m_length(init_list.size())
     {
          while (m_capacity < m_length)
             m_capacity *= 2;
@@ -232,7 +232,7 @@ public:
         m_capacity = newCapacity;
     }
 
-    ~Array()
+    virtual ~Array()
     {
         if (m_buffer == nullptr)
             return;
