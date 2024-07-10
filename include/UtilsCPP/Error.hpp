@@ -13,6 +13,8 @@
 #include <ostream>
 #include <exception>
 
+#define ERR_DESC(str) inline const char* description() const override { return str; }
+
 namespace utils
 {
 

@@ -17,3 +17,11 @@
         #define DEPRECATED(msg)
     #endif
 #endif
+
+#ifndef UNREACHABLE
+    #if defined(_MSC_VER) && !defined(__clang__) // MSVC
+        #define UNREACHABLE __assume(false);
+    #else // GCC, Clang
+        #define UNREACHABLE __builtin_unreachable();
+    #endif
+#endif

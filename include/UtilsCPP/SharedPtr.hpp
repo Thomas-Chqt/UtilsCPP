@@ -13,6 +13,7 @@
 #include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/Types.hpp"
 #include <ostream>
+#include <utility>
 #include "UtilsCPP/UniquePtr.hpp"
 
 namespace utils
@@ -30,6 +31,7 @@ class SharedPtr : public SharedPtrBase
 public:
     struct NullPointerError : public Error { inline const char* description() const override { return "Dereferencing a null pointer"; } };
     struct NotUniqueError : public Error { inline const char* description() const override { return "Not the unique owner of the pointer"; } };
+    struct DynamicCastError : public Error { ERR_DESC("Error while dynamic casting") };
 
 private:
     template<typename Y> friend class SharedPtr;
@@ -87,6 +89,14 @@ public:
             *output.m_refCount += 1;
 
         return output;
+    }
+
+    template<typename Y>
+    SharedPtr<Y> forceDynamicCast() const
+    {
+        if (SharedPtr<Y> casted = dynamicCast<Y>())
+            return casted;
+        throw DynamicCastError();
     }
 
     UniquePtr<Type> makeUnique()
@@ -170,6 +180,12 @@ public:
 
     inline friend std::ostream& operator << (std::ostream& os, const SharedPtr<T>& ptr) { return os << (void*)ptr.m_pointer; }
 };
+
+template<typename T, typename ... ARGS>
+SharedPtr<T> makeShared(ARGS&&... args)
+{
+    return SharedPtr<T>(new T(std::forward<ARGS>(args)...));
+}
 
 }
 
