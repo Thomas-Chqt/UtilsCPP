@@ -36,8 +36,8 @@ private:
         CallableF(const CallableF&) = delete;
         CallableF(CallableF&&)      = delete;
 
-        CallableF(const F& f) : m_f(f) {}
-        CallableF(F&& f) : m_f((F&&)f) {}
+        explicit CallableF(const F& f) : m_f(f) {}
+        explicit CallableF(F&& f) : m_f((F&&)f) {}
 
         inline ReturnValue call(Args... args) const override { return m_f(args...); }
         ICallable* clone() const override { return new CallableF(m_f); }
@@ -55,7 +55,7 @@ private:
         CallablePTR(const CallablePTR&) = delete;
         CallablePTR(CallablePTR&&)      = delete;
 
-        CallablePTR(ReturnValue (*f)(Args... args)) : m_f(f) {}
+        explicit CallablePTR(ReturnValue (*f)(Args... args)) : m_f(f) {}
 
         inline ReturnValue call(Args... args) const override { return m_f(args...); }
         ICallable* clone() const override { return new CallablePTR(m_f); }
@@ -93,17 +93,17 @@ public:
     {
     }
 
-    Func(Func&& mv) : m_callable(mv.m_callable)
+    Func(Func&& mv) noexcept : m_callable(mv.m_callable)
     {
         mv.m_callable = nullptr;
     }
 
     template <typename F>
-    Func(const F& f) : m_callable(new CallableF<F>(f))
+    Func(const F& f) : m_callable(new CallableF<F>(f)) // NOLINT(*-explicit-constructor)
     {
     }
 
-    Func(ReturnValue (*f)(Args... args)) : m_callable(new CallablePTR(f))
+    Func(ReturnValue (*f)(Args... args)) : m_callable(new CallablePTR(f)) // NOLINT(*-explicit-constructor)
     {
     }
 
@@ -125,20 +125,26 @@ public:
 
     Func& operator = (const Func& rhs)
     {
-        delete m_callable;
-        m_callable = rhs.m_callable->clone();
+        if (&rhs != this)
+        {
+            delete m_callable;
+            m_callable = rhs.m_callable->clone();
+        }
         return *this;
     }
 
-    Func& operator = (Func&& rhs)
+    Func& operator = (Func&& rhs) noexcept
     {
-        delete m_callable;
-        m_callable = rhs.m_callable;
-        rhs.m_callable = nullptr;
+        if (&rhs != this)
+        {
+            delete m_callable;
+            m_callable = rhs.m_callable;
+            rhs.m_callable = nullptr;
+        }
         return *this;
     }
 
-    inline operator bool () const { return m_callable != nullptr; }
+    inline operator bool () const { return m_callable != nullptr; } // NOLINT(*-explicit-constructor)
 };
 
 }

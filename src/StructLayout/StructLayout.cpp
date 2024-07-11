@@ -33,40 +33,40 @@ void StructLayout::recomputeOffsetsAndSize()
     m_size = (m_size + maxAlign - 1) & ~(maxAlign - 1);
 }
 
-template<> StructLayout getLayout<unsigned char>() { return StructLayout(); }
+template<> StructLayout getLayout<unsigned char>() { return {}; }
 template<> uint32 getTypeID<unsigned char>() { return TYPEID_UCHAR; }
 
-template<> StructLayout getLayout<char>() { return StructLayout(); }
+template<> StructLayout getLayout<char>() { return {}; }
 template<> uint32 getTypeID<char>() { return TYPEID_CHAR; }
 
-template<> StructLayout getLayout<unsigned short>() { return StructLayout(); }
+template<> StructLayout getLayout<unsigned short>() { return {}; }
 template<> uint32 getTypeID<unsigned short>() { return TYPEID_USHORT; }
 
-template<> StructLayout getLayout<short>() { return StructLayout(); }
+template<> StructLayout getLayout<short>() { return {}; }
 template<> uint32 getTypeID<short>() { return TYPEID_SHORT; }
 
-template<> StructLayout getLayout<unsigned int>() { return StructLayout(); }
+template<> StructLayout getLayout<unsigned int>() { return {}; }
 template<> uint32 getTypeID<unsigned int>() { return TYPEID_UINT; }
 
-template<> StructLayout getLayout<int>() { return StructLayout(); }
+template<> StructLayout getLayout<int>() { return {}; }
 template<> uint32 getTypeID<int>() { return TYPEID_INT; }
 
-template<> StructLayout getLayout<float>() { return StructLayout(); }
+template<> StructLayout getLayout<float>() { return {}; }
 template<> uint32 getTypeID<float>() { return TYPEID_INT; }
 
-template<> StructLayout getLayout<unsigned long>() { return StructLayout(); }
+template<> StructLayout getLayout<unsigned long>() { return {}; }
 template<> uint32 getTypeID<unsigned long>() { return TYPEID_ULONG; }
 
-template<> StructLayout getLayout<long>() { return StructLayout(); }
+template<> StructLayout getLayout<long>() { return {}; }
 template<> uint32 getTypeID<long>() { return TYPEID_LONG; }
 
-template<> StructLayout getLayout<double>() { return StructLayout(); }
+template<> StructLayout getLayout<double>() { return {}; }
 template<> uint32 getTypeID<double>() { return TYPEID_DOUBLE; }
 
-template<> StructLayout getLayout<unsigned long long>() { return StructLayout(); }
+template<> StructLayout getLayout<unsigned long long>() { return {}; }
 template<> uint32 getTypeID<unsigned long long>() { return TYPEID_ULLONG; }
 
-template<> StructLayout getLayout<long long>() { return StructLayout(); }
+template<> StructLayout getLayout<long long>() { return {}; }
 template<> uint32 getTypeID<long long>() { return TYPEID_LLONG; }
 
 }

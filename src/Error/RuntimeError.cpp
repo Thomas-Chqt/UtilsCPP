@@ -7,12 +7,14 @@
  * ---------------------------------------------------
  */
 
+#include <utility>
+
 #include "UtilsCPP/RuntimeError.hpp"
 
 namespace utils
 {
 
-RuntimeError::RuntimeError(const String& desc) : m_description(desc)
+RuntimeError::RuntimeError(String desc) : m_description(std::move(desc))
 {
 }
 

@@ -48,7 +48,7 @@ public:
             *m_refCount += 1;
     }
 
-    SharedPtr(SharedPtr&& mv) : m_pointer(mv.m_pointer), m_refCount(mv.m_refCount)
+    SharedPtr(SharedPtr&& mv) noexcept : m_pointer(mv.m_pointer), m_refCount(mv.m_refCount)
     {
         mv.m_pointer = nullptr;
         mv.m_refCount = nullptr;
@@ -126,7 +126,7 @@ public:
         m_refCount = nullptr;
     }
 
-    ~SharedPtr()
+    ~SharedPtr() override
     {
         clear();
     }
@@ -138,7 +138,7 @@ private:
 public:
     SharedPtr& operator = (const SharedPtr& rhs)
     {
-        if (rhs != *this)
+        if (&rhs != this)
         {
             clear();
             m_pointer = rhs.m_pointer;
@@ -149,9 +149,9 @@ public:
         return *this;
     }
 
-    SharedPtr& operator = (SharedPtr&& rhs)
+    SharedPtr& operator = (SharedPtr&& rhs) noexcept
     {
-        if (rhs != *this)
+        if (&rhs != this)
         {
             clear();
             m_pointer = rhs.m_pointer;
@@ -171,12 +171,12 @@ public:
 
     inline Type* operator -> () const { return  m_pointer; }
 
-    inline operator T* () const { return m_pointer; }
+    inline operator T* () const { return m_pointer; } // NOLINT(*-explicit-constructor)
 
     template<typename Y> inline bool operator == (const SharedPtr<Y>& rhs) const { return (void*)m_pointer == (void*)rhs.m_pointer; }
     template<typename Y> inline bool operator != (const SharedPtr<Y>& rhs) const { return (void*)m_pointer != (void*)rhs.m_pointer; }
 
-    inline operator bool () const { return m_pointer != nullptr; }
+    inline operator bool () const { return m_pointer != nullptr; } // NOLINT(*-explicit-constructor)
 
     inline friend std::ostream& operator << (std::ostream& os, const SharedPtr<T>& ptr) { return os << (void*)ptr.m_pointer; }
 };

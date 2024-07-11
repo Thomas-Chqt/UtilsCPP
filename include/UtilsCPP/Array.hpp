@@ -47,7 +47,7 @@ public:
             new (m_buffer + i) Element(cp[i]);
     }
 
-    Array(Array&& mv) : m_length(mv.m_length), m_capacity(mv.m_capacity), m_buffer(mv.m_buffer)
+    Array(Array&& mv) noexcept : m_length(mv.m_length), m_capacity(mv.m_capacity), m_buffer(mv.m_buffer)
     {
         mv.m_buffer = nullptr;
     }
@@ -73,7 +73,7 @@ public:
             new (m_buffer + idx) Element(*curr);
     }
 
-    Array(Size length, const Element& val = Element()) : m_length(length)
+    explicit Array(Size length, const Element& val = Element()) : m_length(length)
     {
         while (m_capacity < m_length)
             m_capacity *= 2;
@@ -218,7 +218,7 @@ public:
         if (newCapacity == m_capacity)
             return;
 
-        Element* newBuffer = (Element*)operator new (sizeof(Element) * newCapacity);
+        auto* newBuffer = (Element*)operator new (sizeof(Element) * newCapacity);
 
         for (Size i = 0; i < m_length; i++)
         {
@@ -274,7 +274,7 @@ public:
         return *this;
     }
 
-    Array& operator = (Array&& mv)
+    Array& operator = (Array&& mv) noexcept
     {
         if (&mv != this)
         {
@@ -326,8 +326,8 @@ public:
 
     inline bool operator != (const Array& rhs) const { return !operator==(rhs); }
 
-    inline operator       Element* ()       { return m_buffer; }
-    inline operator const Element* () const { return m_buffer; }
+    inline operator       Element* ()       { return m_buffer; } // NOLINT(*-explicit-constructor)
+    inline operator const Element* () const { return m_buffer; } // NOLINT(*-explicit-constructor)
 
 public:
     class Iterator
@@ -364,9 +364,12 @@ public:
         inline Iterator  operator -- (int) { Iterator temp(*this); --m_idx; return temp; }
 
         inline bool operator == (const Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "Simplify"
         inline bool operator != (const Iterator& rhs) const { return !(*this == rhs); }
+#pragma clang diagnostic pop
 
-        inline operator Element* () const { return m_arrayRef->m_buffer + m_idx; }
+        inline explicit operator Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };
 
     class const_Iterator
@@ -403,9 +406,12 @@ public:
         inline const_Iterator  operator -- (int) { const_Iterator temp(*this); --m_idx; return temp; }
 
         inline bool operator == (const const_Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "Simplify"
         inline bool operator != (const const_Iterator& rhs) const { return !(*this == rhs); }
+#pragma clang diagnostic pop
 
-        inline operator const Element* () const { return m_arrayRef->m_buffer + m_idx; }
+        inline explicit operator const Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };
 };
 

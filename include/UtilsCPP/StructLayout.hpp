@@ -38,9 +38,9 @@ struct StructLayoutElement;
 class StructLayout : public Array<StructLayoutElement>
 {
 public:
-    StructLayout()                    = default;
-    StructLayout(const StructLayout&) = default;
-    StructLayout(StructLayout&&)      = default;
+    StructLayout()                        = default;
+    StructLayout(const StructLayout&)     = default;
+    StructLayout(StructLayout&&) noexcept = default;
     
     StructLayout(const std::initializer_list<Element>&);
 
@@ -53,8 +53,8 @@ private:
     uint32 m_size = 0;
 
 public:
-    StructLayout& operator = (const StructLayout&) = default;
-    StructLayout& operator = (StructLayout&&)      = default;
+    StructLayout& operator = (const StructLayout&)     = default;
+    StructLayout& operator = (StructLayout&&) noexcept = default;
 };
 
 struct StructLayoutElement

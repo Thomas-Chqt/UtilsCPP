@@ -27,7 +27,7 @@ public:
     virtual const char* description() const = 0;
     inline const char* what() const noexcept override { return description(); };
     
-    virtual ~Error() = default;
+    ~Error() override = default;
 
 protected:
     Error() = default;

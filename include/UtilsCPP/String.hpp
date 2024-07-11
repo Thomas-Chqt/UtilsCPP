@@ -28,11 +28,11 @@ public:
 
 public:
     String();
-    String(const String&) = default;
-    String(String&&)      = default;
+    String(const String&)     = default;
+    String(String&&) noexcept = default;
 
-    String(const char* literal);
-    String(Size length, char c = '\0');
+    String(const char* literal); // NOLINT(*-explicit-constructor)
+    explicit String(Size length, char c = '\0');
     
     static String contentOf(std::istream&);
     static String contentOfFile(const String& path);
@@ -63,8 +63,8 @@ private:
     Array<char> m_characters;
 
 public:
-    String& operator = (const String&) = default;
-    String& operator = (String&&)      = default;
+    String& operator = (const String&)     = default;
+    String& operator = (String&&) noexcept = default;
 
     inline bool operator == (const String& rhs) const { return m_characters == rhs.m_characters; }
     inline bool operator != (const String& rhs) const { return m_characters != rhs.m_characters; };
@@ -72,8 +72,8 @@ public:
     inline       char& operator [] (Index idx)       { return m_characters[idx]; };
     inline const char& operator [] (Index idx) const { return m_characters[idx]; };
 
-    inline operator       char* ()       { return (      char*)m_characters; }
-    inline operator const char* () const { return (const char*)m_characters; }
+    inline operator       char* ()       { return (      char*)m_characters; } // NOLINT(*-explicit-constructor)
+    inline operator const char* () const { return (const char*)m_characters; } // NOLINT(*-explicit-constructor)
 
     friend String operator + (const String& s1, const String& s2);
 };

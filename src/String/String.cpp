@@ -34,11 +34,11 @@ String String::contentOf(std::istream& istream)
 {
     String output;
 
-    int c = istream.get();
+    char c = (char)istream.get();
     while (c != std::istream::traits_type::eof())
     {
         output.append(c);
-        c = istream.get();
+        c = (char)istream.get();
     }
 
     return output;
