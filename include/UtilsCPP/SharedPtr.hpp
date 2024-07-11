@@ -19,7 +19,7 @@
 namespace utils
 {
 
-class SharedPtrBase
+class SharedPtrBase // NOLINT(cppcoreguidelines-special-member-functions)
 {
 public:
     virtual ~SharedPtrBase() = default;
@@ -171,12 +171,12 @@ public:
 
     inline Type* operator -> () const { return  m_pointer; }
 
-    inline operator T* () const { return m_pointer; } // NOLINT(*-explicit-constructor)
+    inline operator T* () const { return m_pointer; }
 
     template<typename Y> inline bool operator == (const SharedPtr<Y>& rhs) const { return (void*)m_pointer == (void*)rhs.m_pointer; }
     template<typename Y> inline bool operator != (const SharedPtr<Y>& rhs) const { return (void*)m_pointer != (void*)rhs.m_pointer; }
 
-    inline operator bool () const { return m_pointer != nullptr; } // NOLINT(*-explicit-constructor)
+    inline operator bool () const { return m_pointer != nullptr; }
 
     inline friend std::ostream& operator << (std::ostream& os, const SharedPtr<T>& ptr) { return os << (void*)ptr.m_pointer; }
 };

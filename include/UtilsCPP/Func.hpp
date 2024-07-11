@@ -20,7 +20,7 @@ template<typename ReturnValue, typename ... Args>
 class Func<ReturnValue(Args...)> 
 {
 private:
-    class ICallable 
+    class ICallable // NOLINT(cppcoreguidelines-special-member-functions)
     {
     public:
         virtual ReturnValue call(Args...) const = 0;
@@ -40,12 +40,16 @@ private:
         explicit CallableF(F&& f) : m_f((F&&)f) {}
 
         inline ReturnValue call(Args... args) const override { return m_f(args...); }
-        ICallable* clone() const override { return new CallableF(m_f); }
+        ICallable* clone() const override { return new CallableF(m_f); } // TODO NOLINT(cppcoreguidelines-owning-memory)
 
         ~CallableF() override = default;
 
     private:
         F m_f;
+
+    public:
+        CallableF& operator = (const CallableF&) = delete;
+        CallableF& operator = (CallableF&&)      = delete;
     };
 
     class CallablePTR : public ICallable
@@ -58,12 +62,17 @@ private:
         explicit CallablePTR(ReturnValue (*f)(Args... args)) : m_f(f) {}
 
         inline ReturnValue call(Args... args) const override { return m_f(args...); }
-        ICallable* clone() const override { return new CallablePTR(m_f); }
+        ICallable* clone() const override { return new CallablePTR(m_f); } // TODO NOLINT(cppcoreguidelines-owning-memory)
 
         ~CallablePTR() override = default;
 
     private:
         ReturnValue (*m_f)(Args... args);
+
+    public:
+        CallablePTR& operator = (const CallablePTR&) = delete;
+        CallablePTR& operator = (CallablePTR&&)      = delete;
+
     };
 
     template<typename Object>
@@ -77,13 +86,17 @@ private:
         CallableMEM(Object& obj, ReturnValue (Object::*f)(Args... args)) : m_obj(obj), m_f(f) {}
 
         inline ReturnValue call(Args... args) const override { return (m_obj.*m_f)(args...); }
-        ICallable* clone() const override { return new CallableMEM(m_obj, m_f); }
+        ICallable* clone() const override { return new CallableMEM(m_obj, m_f); } // TODO NOLINT(cppcoreguidelines-owning-memory)
 
         ~CallableMEM() override = default;
 
     private:
         Object& m_obj;
         ReturnValue (Object::*m_f)(Args... args);
+
+    public:
+        CallableMEM& operator = (const CallableMEM&) = delete;
+        CallableMEM& operator = (CallableMEM&&)      = delete;
     };
 
 public:
@@ -99,11 +112,11 @@ public:
     }
 
     template <typename F>
-    Func(const F& f) : m_callable(new CallableF<F>(f)) // NOLINT(*-explicit-constructor)
+    Func(const F& f) : m_callable(new CallableF<F>(f))
     {
     }
 
-    Func(ReturnValue (*f)(Args... args)) : m_callable(new CallablePTR(f)) // NOLINT(*-explicit-constructor)
+    Func(ReturnValue (*f)(Args... args)) : m_callable(new CallablePTR(f))
     {
     }
 
@@ -144,7 +157,7 @@ public:
         return *this;
     }
 
-    inline operator bool () const { return m_callable != nullptr; } // NOLINT(*-explicit-constructor)
+    inline operator bool () const { return m_callable != nullptr; }
 };
 
 }

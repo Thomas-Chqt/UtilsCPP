@@ -37,7 +37,7 @@ public:
     class const_Iterator;
 
 public:
-    Array() : m_length(0), m_capacity(1), m_buffer((Element*)operator new (sizeof(Element) * 1))
+    Array() : m_buffer((Element*)operator new (sizeof(Element) * 1))
     {
     }
 
@@ -55,9 +55,6 @@ public:
     template<typename Iterator>
     Array(const Iterator& begin, const Iterator& end)
     {
-        m_length = 0;
-        m_capacity = 1;
-
         for (Iterator it = begin; it != end; ++it)
         {
             m_length += 1;
@@ -406,10 +403,7 @@ public:
         inline const_Iterator  operator -- (int) { const_Iterator temp(*this); --m_idx; return temp; }
 
         inline bool operator == (const const_Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "Simplify"
         inline bool operator != (const const_Iterator& rhs) const { return !(*this == rhs); }
-#pragma clang diagnostic pop
 
         inline explicit operator const Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };

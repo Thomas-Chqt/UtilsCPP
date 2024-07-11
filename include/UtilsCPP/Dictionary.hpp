@@ -82,6 +82,8 @@ public:
         return operator[](key);
     }
 
+    ~Dictionary() = default;
+
 private:
     DataStructure m_data;
 

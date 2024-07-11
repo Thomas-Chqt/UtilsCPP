@@ -31,7 +31,7 @@ public:
     String(const String&)     = default;
     String(String&&) noexcept = default;
 
-    String(const char* literal); // NOLINT(*-explicit-constructor)
+    String(const char* literal);
     explicit String(Size length, char c = '\0');
     
     static String contentOf(std::istream&);
@@ -72,8 +72,8 @@ public:
     inline       char& operator [] (Index idx)       { return m_characters[idx]; };
     inline const char& operator [] (Index idx) const { return m_characters[idx]; };
 
-    inline operator       char* ()       { return (      char*)m_characters; } // NOLINT(*-explicit-constructor)
-    inline operator const char* () const { return (const char*)m_characters; } // NOLINT(*-explicit-constructor)
+    inline operator       char* ()       { return (      char*)m_characters; }
+    inline operator const char* () const { return (const char*)m_characters; }
 
     friend String operator + (const String& s1, const String& s2);
 };
