@@ -51,18 +51,18 @@ public:
     inline       Iterator end()         { return m_data.end(); }
     inline const_Iterator end()   const { return m_data.end(); }
 
-    void insert(const Key& key, const Value& val)
+    Iterator insert(const Key& key, const Value& val)
     {
         if (m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }))
             throw DuplicateKeyError();
-        m_data.append(KeyValPair{ Key(key), Value(val) });
+        return m_data.append(KeyValPair{ Key(key), Value(val) });
     }
 
-    void insert(const Key& key, Value&& val)
+    Iterator insert(const Key& key, Value&& val)
     {
         if (m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }))
             throw DuplicateKeyError();
-        m_data.append(KeyValPair{ Key(key), Value(std::move(val)) });
+        return m_data.append(KeyValPair{ Key(key), Value(std::move(val)) });
     }
 
     void remove(const Key& key)
