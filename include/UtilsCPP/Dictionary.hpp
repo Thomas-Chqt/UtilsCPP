@@ -60,7 +60,7 @@ public:
     inline void insert(const Key& key, const Value& val) { m_data.insert(KeyValPair{key, val}); }
     inline void insert(const Key& key, Value&& val) { m_data.insert(KeyValPair{key, std::move(val)}); }
 
-    inline void remove(const Key& key) { } // TODO
+    inline void remove(const Key& key) { m_data.remove(m_data.find(key)); }
 
     inline void clear() { m_data.clear(); }
 

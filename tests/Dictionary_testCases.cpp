@@ -51,15 +51,9 @@ TEST_F(DictionaryTest, access)
     EXPECT_EQ(dic["1"], "1");
     EXPECT_EQ(dic["2"], "2");
 
-    EXPECT_ANY_THROW({ dic["33"]; });
-}
+    using KeyNoFoundError = Dictionary<std::string, std::string>::KeyNoFoundError;
 
-TEST_F(DictionaryTest, get)
-{
-    Dictionary<int, std::string> dic;
-
-    EXPECT_EQ(dic.get(1), "");
-    EXPECT_EQ(dic.get(2, "val"), "val");
+    EXPECT_THROW({ dic["33"]; }, KeyNoFoundError);
 }
 
 }
