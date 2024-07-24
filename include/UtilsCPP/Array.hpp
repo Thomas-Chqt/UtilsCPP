@@ -10,10 +10,11 @@
 #ifndef ARRAY_HPP
 # define ARRAY_HPP
 
-#include "UtilsCPP/Error.hpp"
-#include "UtilsCPP/Iterator.hpp"
-#include "UtilsCPP/Types.hpp"
-#include "UtilsCPP/Func.hpp"
+#include "Error.hpp"
+#include "Iterator.hpp"
+#include "Types.hpp"
+#include "Func.hpp"
+#include "Functions.hpp"
 
 #include <initializer_list>
 #include <utility>
@@ -83,7 +84,7 @@ public:
 
     Array(const std::initializer_list<Element>& init_list) : m_length(init_list.size())
     {
-         while (m_capacity < m_length)
+        while (m_capacity < m_length)
             m_capacity *= 2;
         
         m_buffer = (Element*)operator new (sizeof(Element) * m_capacity);
@@ -104,7 +105,7 @@ public:
 
     Iterator findWhere(const Func<bool(const Element&)>& condition)
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(condition(m_buffer[index]))
@@ -115,7 +116,7 @@ public:
 
     const_Iterator findWhere(const Func<bool(const Element&)>& condition) const
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(condition(m_buffer[index]))
@@ -127,7 +128,7 @@ public:
     template<typename S>
     Iterator find(const S& searched)
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(m_buffer[index] == searched)
@@ -139,7 +140,7 @@ public:
     template<typename S>
     const_Iterator find(const S& searched) const
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(m_buffer[index] == searched)
@@ -209,6 +210,30 @@ public:
     inline const Element& last()  const { return m_buffer[m_length - 1]; }
     inline       Element& first()       { return m_buffer[0]; }
     inline const Element& first() const { return m_buffer[0]; }
+
+    void sort()
+    {
+        Func<Index(Index, Index)> partition = [&](Index l, Index r) -> Index {
+            Element& pivot = (*this)[r];
+            Index pivotDst = l;
+            for (Index i = l; i < r; i++)
+            {
+                if ((*this)[i] < pivot)
+                    swap((*this)[pivotDst++], (*this)[i]);
+            }
+            swap((*this)[pivotDst], pivot);
+            return pivotDst;
+        };
+        Func<void(Index, Index)> quickSort = [&](Index l, Index r) {
+            if (l < r)
+            {
+                Index pivotIdx = partition(l, r);
+                quickSort(l, pivotIdx == 0 ? 0 : pivotIdx - 1);
+                quickSort(pivotIdx + 1, r);
+            }
+        };
+        quickSort(0, length() - 1);
+    }
 
     void setCapacity(Size newCapacity)
     {

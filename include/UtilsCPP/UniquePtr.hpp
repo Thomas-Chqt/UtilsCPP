@@ -107,6 +107,12 @@ public:
     inline operator bool () const { return m_pointer != nullptr; } // NOLINT(*-explicit-constructor)
 };
 
+template<typename T, typename ... ARGS>
+UniquePtr<T> makeUnique(ARGS&&... args)
+{
+    return UniquePtr<T>(new T(std::forward<ARGS>(args)...));
+}
+
 }
 
 #endif // UNIQUEPTR_HPP

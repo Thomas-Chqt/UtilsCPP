@@ -10,7 +10,7 @@
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
-#include "UtilsCPP/Types.hpp"
+#include "Types.hpp"
 #include <algorithm>
 
 namespace utils
