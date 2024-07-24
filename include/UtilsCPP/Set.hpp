@@ -10,10 +10,10 @@
 #ifndef SET_HPP
 # define SET_HPP
 
-#include "UtilsCPP/Error.hpp"
-#include "UtilsCPP/Func.hpp"
-#include "UtilsCPP/Types.hpp"
-#include "UtilsCPP/UniquePtr.hpp"
+#include "Error.hpp"
+#include "Func.hpp"
+#include "Types.hpp"
+#include "UniquePtr.hpp"
 
 namespace utils
 {
@@ -22,10 +22,11 @@ template<typename T>
 class Set
 {
 public:
-    struct DuplicateElementError : public Error { inline const char* description() const override { return "Value already in the set"; } };
+    struct DuplicateElementError : public Error { inline const char* description() const override { return "Element already in the set"; } };
 
 public:
-    using Value = T;
+    using Element = T;
+    using Size    = uint64;
 
     class Iterator;
     class const_Iterator;
@@ -53,7 +54,7 @@ public:
 
     Set(Set&&) = default;
 
-    Set(std::initializer_list<Value> init_list)
+    Set(std::initializer_list<Element> init_list)
     {
         for (const auto& elem : init_list)
             insert(elem);
@@ -61,9 +62,9 @@ public:
 
     inline bool isEmpty() const { return m_root == false; }
     
-    uint32 size() const
+    Size size() const
     {
-        Func<uint32(const UniquePtr<Node>&)> subTreeSize = [&](const UniquePtr<Node>& root) -> uint32
+        Func<Size(const UniquePtr<Node>&)> subTreeSize = [&](const UniquePtr<Node>& root) -> Size
         {
             if (root == false)
                 return 0;
@@ -91,7 +92,7 @@ public:
     inline Iterator end() { return Iterator(nullptr); }
     inline const_Iterator end() const { return const_Iterator(nullptr); }
 
-    Iterator insert(const Value& value)
+    Iterator insert(const Element& value)
     {
         Func<Node*(Node*)> insertInSubTree = [&](Node* root) -> Node* {
             if (root->value == value)
@@ -113,36 +114,79 @@ public:
             return Iterator(m_root = makeUnique<Node>(value, nullptr));
         return Iterator(insertInSubTree(m_root));
     }
+
+    Iterator insert(Element&& value)
+    {
+        Func<Node*(Node*)> insertInSubTree = [&](Node* root) -> Node* {
+            if (root->value == value)
+                throw DuplicateElementError();
+            if (value < root->value)
+            {
+                if (root->left == nullptr)
+                    return root->left = makeUnique<Node>(std::move(value), root);
+                return insertInSubTree(root->left);
+            }
+            else
+            {
+                if (root->right == nullptr)
+                    return root->right = makeUnique<Node>(std::move(value), root);
+                return insertInSubTree(root->right);
+            }
+        };
+        if (m_root == nullptr)
+            return Iterator(m_root = makeUnique<Node>(std::move(value), nullptr));
+        return Iterator(insertInSubTree(m_root));
+    }
     
-    Iterator find(const Value& value)
+    template<typename Y>
+    Iterator find(const Y& value)
     {
         Func<Node*(Node*)> findInSubTree = [&](Node* root) -> Node* {
             if (root == nullptr)
                 return nullptr;
             if (root->value == value)
                 return root;
-            if (value < root->value)
-                return findInSubTree(root->left);
-            else
+            if (root->value < value)
                 return findInSubTree(root->right);
+            else
+                return findInSubTree(root->left);
         };
         return Iterator(findInSubTree(m_root));
     }
 
-    inline bool contain(const Value& value) const { return find(value) != end(); }
+    template<typename Y>
+    const_Iterator find(const Y& value) const
+    {
+        Func<Node*(Node*)> findInSubTree = [&](Node* root) -> Node* {
+            if (root == nullptr)
+                return nullptr;
+            if (root->value == value)
+                return root;
+            if (root->value < value)
+                return findInSubTree(root->right);
+            else
+                return findInSubTree(root->left);
+        };
+        return const_Iterator(findInSubTree(m_root));
+    }
+
+    template<typename Y>
+    inline bool contain(const Y& value) const { return find(value) != end(); }
+
+    inline void clear() { m_root.clear(); }
 
     ~Set() = default;
 
 private:
     struct Node
     {        
-        Value value;
+        Element value;
         Node* parent = nullptr;
         UniquePtr<Node> left;
         UniquePtr<Node> right;
      
         Node() = default;
-        Node(Value v, Node* parent = nullptr) : value(v), parent(parent) {}
+        Node(Element v, Node* parent = nullptr) : value(v), parent(parent) {}
     };
 
     UniquePtr<Node> m_root;
@@ -189,8 +233,8 @@ public:
         Iterator& operator = (const Iterator& cp) = default;
         Iterator& operator = (Iterator&& mv)      = default;
 
-        inline Value& operator  * () const { return  m_currNode->value; };
-        inline Value* operator -> () const { return &m_currNode->value; };
+        inline Element& operator  * () const { return  m_currNode->value; };
+        inline Element* operator -> () const { return &m_currNode->value; };
 
         inline bool operator == (const Iterator& rhs) const { return m_currNode == rhs.m_currNode; }
         inline bool operator != (const Iterator& rhs) const { return !(*this == rhs); }
@@ -235,8 +279,8 @@ public:
         const_Iterator& operator = (const const_Iterator& cp) = default;
         const_Iterator& operator = (const_Iterator&& mv)      = default;
 
-        inline const Value& operator  * () const { return  m_node->value; };
-        inline const Value* operator -> () const { return &m_node->value; };
+        inline const Element& operator  * () const { return  m_node->value; };
+        inline const Element* operator -> () const { return &m_node->value; };
 
         inline bool operator == (const const_Iterator& rhs) const { return m_node == rhs.m_node; }
         inline bool operator != (const const_Iterator& rhs) const { return !(*this == rhs); }

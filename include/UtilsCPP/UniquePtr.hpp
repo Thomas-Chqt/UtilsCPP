@@ -10,7 +10,7 @@
 #ifndef UNIQUEPTR_HPP
 # define UNIQUEPTR_HPP
 
-#include "UtilsCPP/Error.hpp"
+#include "Error.hpp"
 
 namespace utils
 {
