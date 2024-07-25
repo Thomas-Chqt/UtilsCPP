@@ -146,6 +146,7 @@ public:
         else if (node->left == nullptr && node->right != nullptr || node->right == nullptr && node->left != nullptr)
         {
             UniquePtr<Node> tmp = std::move(node->left == nullptr ? node->right : node->left);
+            tmp->parent = node->parent;
             node = std::move(tmp);
         }
         else
@@ -160,37 +161,38 @@ public:
                 UniquePtr<Node> br = std::move(b->right);
 
                 b->parent = node->parent;
-                b->left = std::move(node->left);
-                b->right = std::move(node);
+                b->setLeft(std::move(node->left));
+                b->setRight(std::move(node));
 
-                b->left->parent = b;
-                
-                b->right->parent = b;
-                b->right->left = std::move(bl);
-                b->right->right = std::move(br);
-                remove(Iterator(b->right));
+                b->right->setLeft(std::move(bl));
+                b->right->setRight(std::move(br));
+
+                node = std::move(b);
             }
             else
             {
-                Node* bp = (*next)->parent;
-                UniquePtr<Node> bl = std::move((*next)->left);
-                UniquePtr<Node> br = std::move((*next)->right);
+                UniquePtr<Node> b = std::move((*next));
+
+                Node* bp = b->parent;
+                UniquePtr<Node> bl = std::move(b->left);
+                UniquePtr<Node> br = std::move(b->right);
 
                 Node* ap = node->parent;
                 UniquePtr<Node> al = std::move(node->left);
                 UniquePtr<Node> ar = std::move(node->right);
 
-                (*next)->parent = ap;
-                (*next)->left = std::move(al);
-                (*next)->left->parent = std::move(al);
-
-                (*next)->right = std::move(ar);
+                b->parent = ap;
+                b->setLeft(std::move(al));
+                b->setRight(std::move(ar));
                 
                 node->parent = bp;
-                node->left = std::move(bl);
-                node->right = std::move(br);
-                remove(it);
+                node->setLeft(std::move(bl));
+                node->setRight(std::move(br));
+
+                (*next) = std::move(node);
+                node = std::move(b);
             }
+            remove(it);
         }
     }
 
@@ -206,6 +208,20 @@ private:
      
         Node() = default;
         Node(Element v, Node* parent = nullptr) : value(v), parent(parent) {}
+
+        void setLeft(UniquePtr<Node>&& node)
+        {
+            if (node != nullptr)
+                node->parent = this;
+            left = std::move(node);
+        }
+
+        void setRight(UniquePtr<Node>&& node)
+        {
+            if (node != nullptr)
+                node->parent = this;
+            right = std::move(node);
+        }
     };
 
     UniquePtr<Node> m_root;

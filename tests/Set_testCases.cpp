@@ -200,58 +200,133 @@ TEST(SetTest, remove)
         set.remove(set.find(5));
         ASSERT_EQ(set.size(), 5);
         ASSERT_EQ(set.find(5), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 5);
     }
     {
         utils::Set<int> set = {20, 10, 30, 5, 25, 35};
         set.remove(set.find(10));
         ASSERT_EQ(set.size(), 5);
         ASSERT_EQ(set.find(10), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 5);
     }
     {
         utils::Set<int> set = {20, 10, 30, 5, 25, 35};
         set.remove(set.find(30));
         ASSERT_EQ(set.size(), 5);
         ASSERT_EQ(set.find(30), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 5);
     }
-    // {
-    //     utils::Set<int> set = {20, 10, 30, 5, 25, 35};
-    //     set.remove(set.find(5));
-    //     ASSERT_EQ(set.size(), 5);
-    //     ASSERT_EQ(set.find(5), set.end());
-    // }
-    // {
-    //     utils::Set<int> set = {20, 10, 30, 5, 25, 35};
-    //     set.remove(set.find(20));
-    //     ASSERT_EQ(set.size(), 5);
-    //     ASSERT_EQ(set.find(20), set.end());
-    // }
-    // {
-    //     utils::Set<int> set = {1, 2, 3, 4, 5, 6};
-    //     set.remove(set.find(6));
-    //     ASSERT_EQ(set.size(), 5);
-    //     ASSERT_EQ(set.find(6), set.end());
-    // }
-    // {
-    //     utils::Set<int> set = {10, 4, 8, 3, 5, 7};
-    //     set.remove(set.find(4));
-    //     ASSERT_EQ(set.size(), 5);
-    //     ASSERT_EQ(set.find(4), set.end());
-    // }
-    // {
-    //     utils::Set<int> set = {1, 2, 3, 4, 5, 6};
-    //     set.remove(set.find(6));
-    //     ASSERT_EQ(set.size(), 5);
-    //     ASSERT_EQ(set.find(6), set.end());
-        
-    //     set.remove(set.find(4));
-    //     ASSERT_EQ(set.size(), 4);
-    //     ASSERT_EQ(set.find(4), set.end());
-    // }
-    // {
-    //     utils::Set<int> set;
-    //     set.remove(set.begin());
-    //     ASSERT_EQ(set.size(), 0);
-    // }
+    {
+        utils::Set<int> set = {20, 10, 30, 5, 25, 35, 4, 6, 33, 36, 34};
+        set.remove(set.find(5));
+        ASSERT_EQ(set.size(), 10);
+        ASSERT_EQ(set.find(5), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 10);
+    }
+    {
+        utils::Set<int> set = {20, 10, 30, 5, 25, 35, 4, 6, 33, 36, 34};
+        set.remove(set.find(25));
+        ASSERT_EQ(set.size(), 10);
+        ASSERT_EQ(set.find(25), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 10);
+    }
+    {
+        utils::Set<int> set = {20, 10, 30, 5, 25, 35, 4, 6, 33, 36, 34};
+        set.remove(set.find(30));
+        ASSERT_EQ(set.size(), 10);
+        ASSERT_EQ(set.find(30), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 10);
+    }
+    {
+        utils::Set<int> set = {20, 10, 30, 5, 25, 35, 4, 6, 33, 36, 34};
+        set.remove(set.find(35));
+        ASSERT_EQ(set.size(), 10);
+        ASSERT_EQ(set.find(35), set.end());
+
+        utils::Set<int>::Iterator curr = set.begin();
+        int prev = 0;
+        int count = 0;
+        for (; curr != set.end(); ++curr) {
+            ASSERT_GT(*curr, prev);
+            prev = *curr;
+            count++;
+        }
+        ASSERT_EQ(count, 10);
+    }
+    {
+        utils::Set<int> set;
+        set.remove(set.begin());
+        ASSERT_EQ(set.size(), 0);
+        ASSERT_EQ(set.begin(), set.end());
+    }
+    {
+        utils::Set<int> set = { 1 };
+        set.remove(set.find(1));
+        ASSERT_EQ(set.size(), 0);
+        ASSERT_EQ(set.find(1), set.end());
+        ASSERT_EQ(set.begin(), set.end());
+    }
+    {
+        utils::Set<int> set = { 1 };
+        set.remove(set.begin());
+        ASSERT_EQ(set.size(), 0);
+        ASSERT_EQ(set.find(1), set.end());
+        ASSERT_EQ(set.begin(), set.end());
+    }
 }
 
 }
