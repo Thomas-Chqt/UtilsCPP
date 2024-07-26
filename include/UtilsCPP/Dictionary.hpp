@@ -10,11 +10,11 @@
 #ifndef DICTIONARY_HPP
 # define DICTIONARY_HPP
 
-#include "Set.hpp"
-#include "Error.hpp"
-#include <algorithm>
-#include <cstdlib>
+#include "UtilsCPP/Set.hpp"
+#include "UtilsCPP/Error.hpp"
 #include "Macros.hpp"
+
+#include <utility>
 
 namespace utils
 {
@@ -23,7 +23,7 @@ template<typename Key, typename Value>
 class Dictionary
 {
 public:
-    struct KeyNoFoundError : public Error { inline const char* description() const override { return "Key not in the dictionary"; } };
+    ERROR_DEFF(KeyNoFoundError, "Key not in the dictionary");
 
 public:
     struct KeyValPair

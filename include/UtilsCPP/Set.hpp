@@ -10,10 +10,11 @@
 #ifndef SET_HPP
 # define SET_HPP
 
-#include "Error.hpp"
-#include "Func.hpp"
-#include "Types.hpp"
-#include "UniquePtr.hpp"
+#include "UtilsCPP/Error.hpp"
+#include "UtilsCPP/Func.hpp"
+#include "UtilsCPP/Types.hpp"
+#include "UtilsCPP/UniquePtr.hpp"
+
 #include <utility>
 
 namespace utils
@@ -23,7 +24,7 @@ template<typename T>
 class Set
 {
 public:
-    struct DuplicateElementError : public Error { inline const char* description() const override { return "Element already in the set"; } };
+    ERROR_DEFF(DuplicateElementError, "Element already in the set");
 
 public:
     using Element = T;

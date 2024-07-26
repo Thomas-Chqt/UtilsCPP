@@ -7,9 +7,9 @@
  * ---------------------------------------------------
  */
 
-#include <utility>
-
 #include "UtilsCPP/RuntimeError.hpp"
+
+#include <utility>
 
 namespace utils
 {

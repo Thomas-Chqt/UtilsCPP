@@ -10,11 +10,10 @@
 #ifndef ARRAY_HPP
 # define ARRAY_HPP
 
-#include "Error.hpp"
-#include "Iterator.hpp"
-#include "Types.hpp"
-#include "Func.hpp"
-#include "Functions.hpp"
+#include "UtilsCPP/Error.hpp"
+#include "UtilsCPP/Types.hpp"
+#include "UtilsCPP/Func.hpp"
+#include "UtilsCPP/Functions.hpp"
 
 #include <initializer_list>
 #include <utility>
@@ -27,7 +26,7 @@ template <typename T>
 class Array
 {
 public:
-    struct OutOfBoundError : public Error { inline const char* description() const override { return "Out of bound access"; } };
+    ERROR_DEFF(OutOfBoundError, "Out of bound access");
 
 public:
     using Element  = T;
@@ -186,7 +185,7 @@ public:
             return;
         Iterator it_next = ++Iterator(curr);
         while (it_next != id_end)
-            swap(curr++, it_next++);
+            swap(*(curr++), *(it_next++));
         (*curr).~Element();
         --m_length;
         if (m_length <= m_capacity / 2)
@@ -348,8 +347,8 @@ public:
 
     inline bool operator != (const Array& rhs) const { return !operator==(rhs); }
 
-    inline operator       Element* ()       { return m_buffer; } // NOLINT(*-explicit-constructor)
-    inline operator const Element* () const { return m_buffer; } // NOLINT(*-explicit-constructor)
+    inline operator       Element* ()       { return m_buffer; }
+    inline operator const Element* () const { return m_buffer; }
 
 public:
     class Iterator
@@ -380,16 +379,16 @@ public:
         inline Element& operator  * () const { return m_arrayRef->m_buffer[m_idx];  };
         inline Element* operator -> () const { return m_arrayRef->m_buffer + m_idx; };
 
-        inline Iterator& operator ++ ()    { ++m_idx; return *this; }
-        inline Iterator  operator ++ (int) { Iterator temp(*this); ++m_idx; return temp; }
+        inline Iterator& operator ++ ()      { ++m_idx; return *this; }
+        inline Iterator  operator ++ (int)   { Iterator temp(*this); ++m_idx; return temp; }
+        inline Iterator  operator  + (int n) { return Iterator(*m_arrayRef, m_idx + n); }
+
         inline Iterator& operator -- ()    { --m_idx; return *this; }
         inline Iterator  operator -- (int) { Iterator temp(*this); --m_idx; return temp; }
+        inline Iterator  operator  - (int n) { return Iterator(*m_arrayRef, m_idx - n); }
 
         inline bool operator == (const Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "Simplify"
         inline bool operator != (const Iterator& rhs) const { return !(*this == rhs); }
-#pragma clang diagnostic pop
 
         inline explicit operator Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };

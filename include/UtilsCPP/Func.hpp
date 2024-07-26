@@ -20,7 +20,7 @@ template<typename ReturnValue, typename ... Args>
 class Func<ReturnValue(Args...)> 
 {
 private:
-    class ICallable // NOLINT(cppcoreguidelines-special-member-functions)
+    class ICallable
     {
     public:
         virtual ReturnValue call(Args...) const = 0;

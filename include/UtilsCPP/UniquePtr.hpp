@@ -10,7 +10,7 @@
 #ifndef UNIQUEPTR_HPP
 # define UNIQUEPTR_HPP
 
-#include "Error.hpp"
+#include "UtilsCPP/Error.hpp"
 
 namespace utils
 {
@@ -19,7 +19,7 @@ template<typename T>
 class UniquePtr
 {
 public:
-    struct NullPointerError : public Error { inline const char* description() const override { return "Dereferencing a null pointer"; } };
+    ERROR_DEFF(NullPointerError, "Dereferencing a null pointer");
 
 private:
     template<typename Y> friend class UniquePtr;

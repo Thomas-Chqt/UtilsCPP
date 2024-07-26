@@ -14,6 +14,7 @@
 #include <exception>
 
 #define ERR_DESC(str) inline const char* description() const override { return str; }
+#define ERROR_DEFF(Type, desc) struct Type : public utils::Error { ERR_DESC(desc) }
 
 namespace utils
 {

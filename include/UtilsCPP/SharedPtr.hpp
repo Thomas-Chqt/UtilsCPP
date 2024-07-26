@@ -12,14 +12,15 @@
 
 #include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/Types.hpp"
+#include "UtilsCPP/UniquePtr.hpp"
+
 #include <ostream>
 #include <utility>
-#include "UtilsCPP/UniquePtr.hpp"
 
 namespace utils
 {
 
-class SharedPtrBase // NOLINT(cppcoreguidelines-special-member-functions)
+class SharedPtrBase
 {
 public:
     virtual ~SharedPtrBase() = default;
@@ -29,9 +30,9 @@ template<typename T>
 class SharedPtr : public SharedPtrBase
 {
 public:
-    struct NullPointerError : public Error { inline const char* description() const override { return "Dereferencing a null pointer"; } };
-    struct NotUniqueError : public Error { inline const char* description() const override { return "Not the unique owner of the pointer"; } };
-    struct DynamicCastError : public Error { ERR_DESC("Error while dynamic casting") };
+    ERROR_DEFF(NullPointerError, "Dereferencing a null pointer");
+    ERROR_DEFF(NotUniqueError, "Not the unique owner of the pointer");
+    ERROR_DEFF(DynamicCastError, "Error while dynamic casting");
 
 private:
     template<typename Y> friend class SharedPtr;
