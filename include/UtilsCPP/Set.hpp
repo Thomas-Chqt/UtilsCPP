@@ -249,6 +249,25 @@ public:
         return thsCurr == this->end() && rhsCurr == rhs.end();
     }
 
+    inline bool operator != (const Set& rhs) const { return !(*this == rhs); }
+
+    bool operator < (const Set& rhs) const
+    {
+        const_Iterator itA = begin();
+        const_Iterator itB = rhs.begin();
+        for (; itA != end() && itB != rhs.end(); ++itA, ++itB)
+        {
+            if (*itA != *itB)
+                return *itA < *itB;
+        }
+        if (itA != end())
+            return false;
+        if (itB != rhs.end())
+            return true;
+        return false;
+    }
+
+
 public:
     class Iterator
     {
