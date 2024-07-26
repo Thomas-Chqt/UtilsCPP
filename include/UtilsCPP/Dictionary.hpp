@@ -12,7 +12,7 @@
 
 #include "UtilsCPP/Set.hpp"
 #include "UtilsCPP/Error.hpp"
-#include "Macros.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 #include <utility>
 
@@ -57,8 +57,8 @@ public:
     inline       Iterator end()         { return m_data.end(); }
     inline const_Iterator end()   const { return m_data.end(); }
 
-    inline void insert(const Key& key, const Value& val) { m_data.insert(KeyValPair{key, val}); }
-    inline void insert(const Key& key, Value&& val) { m_data.insert(KeyValPair{key, std::move(val)}); }
+    inline Iterator insert(const Key& key, const Value& val) { return m_data.insert(KeyValPair{key, val}); }
+    inline Iterator insert(const Key& key, Value&& val) { return m_data.insert(KeyValPair{key, std::move(val)}); }
 
     inline void remove(const Key& key) { m_data.remove(m_data.find(key)); }
 
