@@ -31,11 +31,11 @@ public:
         Key key;
         Value val;
 
-        inline bool operator == (const KeyValPair& rhs) { return key == rhs.key ; }
-        inline bool operator  < (const KeyValPair& rhs) { return key  < rhs.key ; }
+        inline bool operator == (const KeyValPair& rhs) const { return key == rhs.key ; }
+        inline bool operator  < (const KeyValPair& rhs) const { return key  < rhs.key ; }
 
-        inline bool operator == (const Key& rhsKey) { return key == rhsKey; }
-        inline bool operator  < (const Key& rhsKey) { return key  < rhsKey; }
+        inline bool operator == (const Key& rhsKey) const { return key == rhsKey; }
+        inline bool operator  < (const Key& rhsKey) const { return key  < rhsKey; }
     };
 
 public:
@@ -71,6 +71,9 @@ public:
             insert(key, deff);
         return operator[](key);
     }
+
+    inline Iterator find(const Key& key) { return m_data.find(key); }
+    inline const_Iterator find(const Key& key) const { return m_data.find(key); }
 
     ~Dictionary() = default;
 
