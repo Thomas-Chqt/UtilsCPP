@@ -111,7 +111,7 @@ public:
         return Iterator(insertInSubTree(m_root));
     }
 
-    inline Iterator insert(const Element& value) { return insert(Element(value)); }
+    inline Iterator insert(const Element& value) { return insert((Element&&)Element(value)); }
     
     template<typename Y>
     Iterator find(const Y& value)
