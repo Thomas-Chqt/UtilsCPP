@@ -13,6 +13,9 @@
 #include <ostream>
 #include <exception>
 
+#define ERR_DESC(str) inline const char* description() const override { return str; }
+#define ERROR_DEFF(Type, desc) struct Type : public utils::Error { ERR_DESC(desc) }
+
 namespace utils
 {
 
@@ -25,7 +28,7 @@ public:
     virtual const char* description() const = 0;
     inline const char* what() const noexcept override { return description(); };
     
-    virtual ~Error() = default;
+    ~Error() override = default;
 
 protected:
     Error() = default;

@@ -34,11 +34,11 @@ String String::contentOf(std::istream& istream)
 {
     String output;
 
-    int c = istream.get();
+    char c = (char)istream.get();
     while (c != std::istream::traits_type::eof())
     {
         output.append(c);
-        c = istream.get();
+        c = (char)istream.get();
     }
 
     return output;
@@ -50,11 +50,11 @@ String String::contentOfFile(const String& path)
     return String::contentOf(ifstream);
 }
 
-String String::fromUInt(uint32 nbr)
+String String::fromUInt(uint32 nbr) // NOLINT(misc-no-recursion)
 {
-    if (nbr / 10 == 0)
+    if (nbr / 10 == 0) // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
         return String(1, (char)(nbr + '0'));
-    return String::fromUInt(nbr / 10) + String(1, (char)(nbr % 10 + '0'));
+    return String::fromUInt(nbr / 10) + String(1, (char)(nbr % 10 + '0')); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }
 
 void String::append(char c)
@@ -71,7 +71,7 @@ String::Index String::lastIndexOf(char c) const
     return idx;
 }
 
-String String::substr(Index start, Size len) const
+String String::substr(Index start, Size len) const // NOLINT(bugprone-easily-swappable-parameters)
 {
     String newStr(len, '\0');
     for (Index idx = 0; idx < len; idx++)

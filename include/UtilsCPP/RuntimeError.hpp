@@ -19,11 +19,11 @@ namespace utils
 class RuntimeError : public Error
 {
 public:
-    RuntimeError()                    = delete;
-    RuntimeError(const RuntimeError&) = default;
-    RuntimeError(RuntimeError&&)      = default;
+    RuntimeError()                        = delete;
+    RuntimeError(const RuntimeError&)     = default;
+    RuntimeError(RuntimeError&&) noexcept = default;
 
-    RuntimeError(const String&);
+    explicit RuntimeError(String);
 
     inline const char* description() const override { return (const char*)m_description; }
 

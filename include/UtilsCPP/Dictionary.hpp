@@ -10,10 +10,11 @@
 #ifndef DICTIONARY_HPP
 # define DICTIONARY_HPP
 
-#include "UtilsCPP/Array.hpp"
+#include "UtilsCPP/Set.hpp"
 #include "UtilsCPP/Error.hpp"
-#include <algorithm>
-#include <cstdlib>
+#include "UtilsCPP/Macros.hpp"
+
+#include <utility>
 
 namespace utils
 {
@@ -22,18 +23,23 @@ template<typename Key, typename Value>
 class Dictionary
 {
 public:
-    struct DuplicateKeyError : public Error { inline const char* description() const override { return "Key already in the dictionary"; } };
-    struct KeyNoFoundError : public Error { inline const char* description() const override { return "Key not in the dictionary"; } };
+    ERROR_DEFF(KeyNoFoundError, "Key not in the dictionary");
 
 public:
     struct KeyValPair
     {
         Key key;
         Value val;
+
+        inline bool operator == (const KeyValPair& rhs) const { return key == rhs.key ; }
+        inline bool operator  < (const KeyValPair& rhs) const { return key  < rhs.key ; }
+
+        inline bool operator == (const Key& rhsKey) const { return key == rhsKey; }
+        inline bool operator  < (const Key& rhsKey) const { return key  < rhsKey; }
     };
 
 public:
-    using DataStructure  = Array<KeyValPair>; // TODO use tree
+    using DataStructure  = Set<KeyValPair>;
     using Size           = typename DataStructure::Size;
     using Iterator       = typename DataStructure::Iterator;
     using const_Iterator = typename DataStructure::const_Iterator;
@@ -43,44 +49,33 @@ public:
     Dictionary(const Dictionary&) = default;
     Dictionary(Dictionary&&)      = default;
 
-    inline bool contain(const Key& key) const { return m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }); }
-    inline Size size() const { return m_data.length(); }
+    inline bool contain(const Key& key) const { return m_data.contain(key); }
+    inline Size size() const { return m_data.size(); }
 
     inline       Iterator begin()       { return m_data.begin(); }
     inline const_Iterator begin() const { return m_data.begin(); }
     inline       Iterator end()         { return m_data.end(); }
     inline const_Iterator end()   const { return m_data.end(); }
 
-    void insert(const Key& key, const Value& val)
-    {
-        if (m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }))
-            throw DuplicateKeyError();
-        m_data.append(KeyValPair{ Key(key), Value(val) });
-    }
+    inline Iterator insert(const Key& key, const Value& val) { return m_data.insert(KeyValPair{key, val}); }
+    inline Iterator insert(const Key& key, Value&& val) { return m_data.insert(KeyValPair{key, std::move(val)}); }
 
-    void insert(const Key& key, Value&& val)
-    {
-        if (m_data.containWhere([&key](const KeyValPair& e){ return e.key == key; }))
-            throw DuplicateKeyError();
-        m_data.append(KeyValPair{ Key(key), Value(std::move(val)) });
-    }
-
-    void remove(const Key& key)
-    {
-        typename DataStructure::Iterator it = m_data.findWhere([&key](const KeyValPair& e){ return e.key == key; });
-        if (it == m_data.end())
-            return;
-        m_data.remove(it);
-    }
+    inline void remove(const Key& key) { m_data.remove(m_data.find(key)); }
 
     inline void clear() { m_data.clear(); }
 
+    DEPRECATED("will be remove or changed")
     Value& get(const Key& key, const Value& deff = Value())
     {
         if (contain(key) == false)
             insert(key, deff);
         return operator[](key);
     }
+
+    inline Iterator find(const Key& key) { return m_data.find(key); }
+    inline const_Iterator find(const Key& key) const { return m_data.find(key); }
+
+    ~Dictionary() = default;
 
 private:
     DataStructure m_data;
@@ -91,7 +86,7 @@ public:
 
     Value& operator [] (const Key& key)
     {
-        typename DataStructure::Iterator it = m_data.findWhere([&key](const KeyValPair& e){ return e.key == key; });
+        typename DataStructure::Iterator it = m_data.find(key);
 
         if (it == m_data.end())
             throw KeyNoFoundError();
@@ -101,7 +96,7 @@ public:
 
     const Value& operator [] (const Key& key) const
     {
-        typename DataStructure::const_Iterator it = m_data.findWhere([&key](const KeyValPair& e){ return e.key == key; });
+        typename DataStructure::const_Iterator it = m_data.find(key);
 
         if (it == m_data.end())
             throw KeyNoFoundError();

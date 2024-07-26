@@ -9,10 +9,12 @@
 
 #include "UtilsCPP/RuntimeError.hpp"
 
+#include <utility>
+
 namespace utils
 {
 
-RuntimeError::RuntimeError(const String& desc) : m_description(desc)
+RuntimeError::RuntimeError(String desc) : m_description(std::move(desc))
 {
 }
 

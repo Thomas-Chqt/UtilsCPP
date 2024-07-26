@@ -531,4 +531,11 @@ TYPED_TEST(ArrayTest, equalOperator) { this->test([this]()
     }
 });}
 
+TEST(ArrayTest, sort)
+{
+    Array<int> arr = { 4, 2, 9, 1, 4, 7, 3, 5, 1 };
+    arr.sort();
+    EXPECT_EQ(arr, Array<int>({1, 1, 2, 3, 4, 4, 5, 7, 9}));
+}
+
 }

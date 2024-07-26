@@ -19,7 +19,7 @@ template<typename T>
 class UniquePtr
 {
 public:
-    struct NullPointerError : public Error { inline const char* description() const override { return "Dereferencing a null pointer"; } };
+    ERROR_DEFF(NullPointerError, "Dereferencing a null pointer");
 
 private:
     template<typename Y> friend class UniquePtr;
@@ -31,7 +31,7 @@ public:
     UniquePtr()                 = default;
     UniquePtr(const UniquePtr&) = delete;
 
-    UniquePtr(UniquePtr&& mv) : m_pointer(mv.m_pointer)
+    UniquePtr(UniquePtr&& mv) noexcept : m_pointer(mv.m_pointer)
     {
         mv.m_pointer = nullptr;
     }
@@ -79,7 +79,7 @@ private:
 public:
     UniquePtr& operator = (const UniquePtr&) = delete;
 
-    UniquePtr& operator = (UniquePtr&& rhs)
+    UniquePtr& operator = (UniquePtr&& rhs) noexcept
     {
         if (rhs != *this)
         {
@@ -99,13 +99,19 @@ public:
 
     inline Type* operator -> () const { return  m_pointer; }
 
-    inline operator T* () const { return m_pointer; }
+    inline operator T* () const { return m_pointer; } // NOLINT(*-explicit-constructor)
 
     template<typename Y> inline bool operator == (const UniquePtr<Y>& rhs) const { return (void*)m_pointer == (void*)rhs.m_pointer; }
     template<typename Y> inline bool operator != (const UniquePtr<Y>& rhs) const { return (void*)m_pointer != (void*)rhs.m_pointer; }
 
-    inline operator bool () const { return m_pointer != nullptr; }
+    inline operator bool () const { return m_pointer != nullptr; } // NOLINT(*-explicit-constructor)
 };
+
+template<typename T, typename ... ARGS>
+UniquePtr<T> makeUnique(ARGS&&... args)
+{
+    return UniquePtr<T>(new T(std::forward<ARGS>(args)...));
+}
 
 }
 

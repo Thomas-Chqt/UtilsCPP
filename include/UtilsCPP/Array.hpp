@@ -11,9 +11,9 @@
 # define ARRAY_HPP
 
 #include "UtilsCPP/Error.hpp"
-#include "UtilsCPP/Iterator.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Func.hpp"
+#include "UtilsCPP/Functions.hpp"
 
 #include <initializer_list>
 #include <utility>
@@ -26,7 +26,7 @@ template <typename T>
 class Array
 {
 public:
-    struct OutOfBoundError : public Error { inline const char* description() const override { return "Out of bound access"; } };
+    ERROR_DEFF(OutOfBoundError, "Out of bound access");
 
 public:
     using Element  = T;
@@ -37,7 +37,7 @@ public:
     class const_Iterator;
 
 public:
-    Array() : m_length(0), m_capacity(1), m_buffer((Element*)operator new (sizeof(Element) * 1))
+    Array() : m_buffer((Element*)operator new (sizeof(Element) * 1))
     {
     }
 
@@ -47,7 +47,7 @@ public:
             new (m_buffer + i) Element(cp[i]);
     }
 
-    Array(Array&& mv) : m_length(mv.m_length), m_capacity(mv.m_capacity), m_buffer(mv.m_buffer)
+    Array(Array&& mv) noexcept : m_length(mv.m_length), m_capacity(mv.m_capacity), m_buffer(mv.m_buffer)
     {
         mv.m_buffer = nullptr;
     }
@@ -55,9 +55,6 @@ public:
     template<typename Iterator>
     Array(const Iterator& begin, const Iterator& end)
     {
-        m_length = 0;
-        m_capacity = 1;
-
         for (Iterator it = begin; it != end; ++it)
         {
             m_length += 1;
@@ -73,7 +70,7 @@ public:
             new (m_buffer + idx) Element(*curr);
     }
 
-    Array(Size length, const Element& val = Element()) : m_length(length)
+    explicit Array(Size length, const Element& val = Element()) : m_length(length)
     {
         while (m_capacity < m_length)
             m_capacity *= 2;
@@ -84,9 +81,9 @@ public:
             new (m_buffer + i) Element(val);
     }
 
-    Array(std::initializer_list<Element> init_list) : m_length(init_list.size())
+    Array(const std::initializer_list<Element>& init_list) : m_length(init_list.size())
     {
-         while (m_capacity < m_length)
+        while (m_capacity < m_length)
             m_capacity *= 2;
         
         m_buffer = (Element*)operator new (sizeof(Element) * m_capacity);
@@ -107,7 +104,7 @@ public:
 
     Iterator findWhere(const Func<bool(const Element&)>& condition)
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(condition(m_buffer[index]))
@@ -118,7 +115,7 @@ public:
 
     const_Iterator findWhere(const Func<bool(const Element&)>& condition) const
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(condition(m_buffer[index]))
@@ -130,7 +127,7 @@ public:
     template<typename S>
     Iterator find(const S& searched)
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(m_buffer[index] == searched)
@@ -142,7 +139,7 @@ public:
     template<typename S>
     const_Iterator find(const S& searched) const
     {
-        Size index = 0;
+        Index index = 0;
         for (; index < m_length; index++)
         {
             if(m_buffer[index] == searched)
@@ -188,7 +185,7 @@ public:
             return;
         Iterator it_next = ++Iterator(curr);
         while (it_next != id_end)
-            swap(curr++, it_next++);
+            swap(*(curr++), *(it_next++));
         (*curr).~Element();
         --m_length;
         if (m_length <= m_capacity / 2)
@@ -213,7 +210,50 @@ public:
     inline       Element& first()       { return m_buffer[0]; }
     inline const Element& first() const { return m_buffer[0]; }
 
-    ~Array()
+    void sort()
+    {
+        Func<Index(Index, Index)> partition = [&](Index l, Index r) -> Index {
+            Element& pivot = (*this)[r];
+            Index pivotDst = l;
+            for (Index i = l; i < r; i++)
+            {
+                if ((*this)[i] < pivot)
+                    swap((*this)[pivotDst++], (*this)[i]);
+            }
+            swap((*this)[pivotDst], pivot);
+            return pivotDst;
+        };
+        Func<void(Index, Index)> quickSort = [&](Index l, Index r) {
+            if (l < r)
+            {
+                Index pivotIdx = partition(l, r);
+                quickSort(l, pivotIdx == 0 ? 0 : pivotIdx - 1);
+                quickSort(pivotIdx + 1, r);
+            }
+        };
+        quickSort(0, length() - 1);
+    }
+
+    void setCapacity(Size newCapacity)
+    {
+        if (newCapacity == m_capacity)
+            return;
+
+        auto* newBuffer = (Element*)operator new (sizeof(Element) * newCapacity);
+
+        for (Size i = 0; i < m_length; i++)
+        {
+            new (newBuffer + i) Element(std::move(m_buffer[i]));
+            m_buffer[i].~Element();
+        }
+
+        operator delete (m_buffer);
+
+        m_buffer = newBuffer;
+        m_capacity = newCapacity;
+    }
+
+    virtual ~Array()
     {
         if (m_buffer == nullptr)
             return;
@@ -223,22 +263,6 @@ public:
     }
 
 private:
-    void setCapacity(Size newCapacity)
-    {
-        if (newCapacity == m_capacity)
-            return;
-
-        Element* newBuffer = (Element*)operator new (sizeof(Element) * newCapacity);
-
-        for (Size i = 0; i < m_length; i++)
-            new (newBuffer + i) Element(std::move(m_buffer[i]));
-
-        operator delete (m_buffer);
-
-        m_buffer = newBuffer;
-        m_capacity = newCapacity;
-    }
-
     inline void extendCapacity() { setCapacity(m_capacity * 2); }
     inline void reduceCapacity() { setCapacity(m_capacity / 2 > 0 ? m_capacity / 2 : 1); }
 
@@ -271,7 +295,7 @@ public:
         return *this;
     }
 
-    Array& operator = (Array&& mv)
+    Array& operator = (Array&& mv) noexcept
     {
         if (&mv != this)
         {
@@ -355,15 +379,18 @@ public:
         inline Element& operator  * () const { return m_arrayRef->m_buffer[m_idx];  };
         inline Element* operator -> () const { return m_arrayRef->m_buffer + m_idx; };
 
-        inline Iterator& operator ++ ()    { ++m_idx; return *this; }
-        inline Iterator  operator ++ (int) { Iterator temp(*this); ++m_idx; return temp; }
+        inline Iterator& operator ++ ()      { ++m_idx; return *this; }
+        inline Iterator  operator ++ (int)   { Iterator temp(*this); ++m_idx; return temp; }
+        inline Iterator  operator  + (int n) { return Iterator(*m_arrayRef, m_idx + n); }
+
         inline Iterator& operator -- ()    { --m_idx; return *this; }
         inline Iterator  operator -- (int) { Iterator temp(*this); --m_idx; return temp; }
+        inline Iterator  operator  - (int n) { return Iterator(*m_arrayRef, m_idx - n); }
 
         inline bool operator == (const Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
         inline bool operator != (const Iterator& rhs) const { return !(*this == rhs); }
 
-        inline operator Element* () const { return m_arrayRef->m_buffer + m_idx; }
+        inline explicit operator Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };
 
     class const_Iterator
@@ -402,7 +429,7 @@ public:
         inline bool operator == (const const_Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
         inline bool operator != (const const_Iterator& rhs) const { return !(*this == rhs); }
 
-        inline operator const Element* () const { return m_arrayRef->m_buffer + m_idx; }
+        inline explicit operator const Element* () const { return m_arrayRef->m_buffer + m_idx; }
     };
 };
 
