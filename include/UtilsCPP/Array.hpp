@@ -343,9 +343,24 @@ public:
         }
 
         return true;
-    }   
+    }
 
     inline bool operator != (const Array& rhs) const { return !operator==(rhs); }
+
+    bool operator < (const Array& rhs) const
+    {
+        Index idx = 0;
+        for (; idx < m_length && idx < rhs.m_length; idx++)
+        {
+            if (m_buffer[idx] != rhs.m_buffer[idx])
+                return m_buffer[idx] < rhs.m_buffer[idx];
+        }
+        if (idx < m_length)
+            return false;
+        if (idx < rhs.m_length)
+            return true;
+        return false;
+    }
 
     inline operator       Element* ()       { return m_buffer; }
     inline operator const Element* () const { return m_buffer; }

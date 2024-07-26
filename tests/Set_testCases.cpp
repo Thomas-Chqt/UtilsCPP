@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 #include "UtilsCPP/Array.hpp"
 #include "UtilsCPP/Set.hpp"
+#include "UtilsCPP/String.hpp"
 #include "random.hpp"
 
 namespace utils_tests
@@ -326,6 +327,34 @@ TEST(SetTest, remove)
         ASSERT_EQ(set.size(), 0);
         ASSERT_EQ(set.find(1), set.end());
         ASSERT_EQ(set.begin(), set.end());
+    }
+}
+
+TEST(SetTest, userDefinedType)
+{
+    {
+        utils::Set<utils::String> set { "d", "b", "f", "a", "c", "e", "g" };
+        EXPECT_EQ(*set.find(utils::String("e")), utils::String("e"));
+    }
+    {
+        utils::Set<utils::String> set { "df", "b", "fh", "ao", "ck", "e", "gu" };
+        EXPECT_EQ(*set.find(utils::String("e")), utils::String("e"));
+    }
+    {
+        utils::Set<utils::String> set { "adf", "ab", "afh", "aao", "ack", "ae", "agu" };
+        EXPECT_EQ(*set.find(utils::String("ae")), utils::String("ae"));
+    }
+    {
+        utils::Set<utils::Set<utils::String>> set { {"d"}, {"b"}, {"f"}, {"a"}, {"c"}, {"e"}, {"g"} };
+        EXPECT_EQ(*set.find(utils::Set<utils::String>{"e"}), utils::Set<utils::String>{"e"});
+    }
+    {
+        utils::Set<utils::Set<utils::String>> set { {"df"}, {"b"}, {"fh"}, {"ao"}, {"ck"}, {"e"}, {"gu"} };
+        EXPECT_EQ(*set.find(utils::Set<utils::String>{"e"}), utils::Set<utils::String>{"e"});
+    }
+    {
+        utils::Set<utils::Set<utils::String>> set { {"adf"}, {"ab"}, {"afh"}, {"aao"}, {"ack"}, {"ae"}, {"agu"} };
+        EXPECT_EQ(*set.find(utils::Set<utils::String>{"ae"}), utils::Set<utils::String>{"ae"});
     }
 }
 
