@@ -192,6 +192,20 @@ public:
             reduceCapacity();
     }
 
+    Element pop(const Iterator& it)
+    {
+        Iterator curr = it;
+        Iterator id_end = end();
+        Iterator it_next = ++Iterator(curr);
+        while (it_next != id_end)
+            swap(*(curr++), *(it_next++));
+        Element output = std::move(*curr);
+        --m_length;
+        if (m_length <= m_capacity / 2)
+            reduceCapacity();
+        return output;
+    }
+
     void clear()
     {
 
@@ -398,8 +412,8 @@ public:
         inline Iterator  operator ++ (int)   { Iterator temp(*this); ++m_idx; return temp; }
         inline Iterator  operator  + (int n) { return Iterator(*m_arrayRef, m_idx + n); }
 
-        inline Iterator& operator -- ()    { --m_idx; return *this; }
-        inline Iterator  operator -- (int) { Iterator temp(*this); --m_idx; return temp; }
+        inline Iterator& operator -- ()      { --m_idx; return *this; }
+        inline Iterator  operator -- (int)   { Iterator temp(*this); --m_idx; return temp; }
         inline Iterator  operator  - (int n) { return Iterator(*m_arrayRef, m_idx - n); }
 
         inline bool operator == (const Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
@@ -436,10 +450,13 @@ public:
         inline const Element& operator  * () const { return m_arrayRef->m_buffer[m_idx];  };
         inline const Element* operator -> () const { return m_arrayRef->m_buffer + m_idx; };
 
-        inline const_Iterator& operator ++ ()    { ++m_idx; return *this; }
-        inline const_Iterator  operator ++ (int) { const_Iterator temp(*this); ++m_idx; return temp; }
-        inline const_Iterator& operator -- ()    { --m_idx; return *this; }
-        inline const_Iterator  operator -- (int) { const_Iterator temp(*this); --m_idx; return temp; }
+        inline const_Iterator& operator ++ ()      { ++m_idx; return *this; }
+        inline const_Iterator  operator ++ (int)   { const_Iterator temp(*this); ++m_idx; return temp; }
+        inline const_Iterator  operator  + (int n) { return Iterator(*m_arrayRef, m_idx + n); }
+
+        inline const_Iterator& operator -- ()      { --m_idx; return *this; }
+        inline const_Iterator  operator -- (int)   { const_Iterator temp(*this); --m_idx; return temp; }
+        inline const_Iterator  operator  - (int n) { return Iterator(*m_arrayRef, m_idx - n); }
 
         inline bool operator == (const const_Iterator& rhs) const { return m_arrayRef == rhs.m_arrayRef && m_idx == rhs.m_idx; }
         inline bool operator != (const const_Iterator& rhs) const { return !(*this == rhs); }

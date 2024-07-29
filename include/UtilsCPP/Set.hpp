@@ -111,6 +111,8 @@ public:
         return Iterator(insertInSubTree(m_root));
     }
 
+    // TODO iterator insert
+
     inline Iterator insert(const Element& value) { return insert((Element&&)Element(value)); }
     
     template<typename Y>
@@ -197,6 +199,13 @@ public:
         }
     }
 
+    Element pop(const Iterator& it)
+    {
+        Element output = std::move(it.m_node->value);
+        remove(it);
+        return output;
+    }
+
     ~Set() = default;
 
 private:
@@ -208,7 +217,8 @@ private:
         UniquePtr<Node> right;
      
         Node() = default;
-        Node(Element v, Node* parent = nullptr) : value(v), parent(parent) {}
+        Node(const Element& v, Node* parent = nullptr) : value(v), parent(parent) {}
+        Node(Element&& v, Node* parent = nullptr) : value(std::move(v)), parent(parent) {}
 
         void setLeft(UniquePtr<Node>&& node)
         {
@@ -267,6 +277,21 @@ public:
         return false;
     }
 
+    Set operator + (Element&& value) const
+    {
+        Set newSet = *this;
+        newSet.insert(std::move(value));
+        return newSet;
+    }
+
+    inline Set operator + (const Element& value) const { return operator + ((Element&&)Element(value)); }
+
+    Set operator - (const Element& value) const
+    {
+        Set newSet = *this;
+        newSet.remove(newSet.find(value));
+        return newSet;
+    }
 
 public:
     class Iterator
