@@ -146,7 +146,7 @@ public:
         UniquePtr<Node>& node = it.m_node->parent == nullptr ? m_root : (it.m_node->parent->right == it.m_node ? it.m_node->parent->right : it.m_node->parent->left);
         if (node->left == nullptr && node->right == nullptr)
             node.clear();
-        else if (node->left == nullptr && node->right != nullptr || node->right == nullptr && node->left != nullptr)
+        else if ((node->left == nullptr && node->right != nullptr) || (node->right == nullptr && node->left != nullptr))
         {
             UniquePtr<Node> tmp = std::move(node->left == nullptr ? node->right : node->left);
             tmp->parent = node->parent;
