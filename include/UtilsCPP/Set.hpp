@@ -137,6 +137,16 @@ public:
     template<typename Y>
     inline bool contain(const Y& value) const { return find(value) != end(); }
 
+    inline bool contain(const Set& other) const
+    {
+        for (const auto& element : other)
+        {
+            if (contain(element) == false)
+                return false;
+        }
+        return true;
+    }
+
     inline void clear() { m_root.clear(); }
 
     void remove(const Iterator& it)
@@ -290,6 +300,14 @@ public:
     {
         Set newSet = *this;
         newSet.remove(newSet.find(value));
+        return newSet;
+    }
+
+    Set operator + (const Set& other) const
+    {
+        Set newSet = *this;
+        for (const auto& element : *this)
+            newSet.insert(element);
         return newSet;
     }
 
