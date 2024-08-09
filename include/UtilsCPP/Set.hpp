@@ -137,6 +137,16 @@ public:
     template<typename Y>
     inline bool contain(const Y& value) const { return find(value) != end(); }
 
+    inline bool contain(const Set& other) const
+    {
+        for (const auto& element : other)
+        {
+            if (contain(element) == false)
+                return false;
+        }
+        return true;
+    }
+
     inline void clear() { m_root.clear(); }
 
     void remove(const Iterator& it)
@@ -146,7 +156,7 @@ public:
         UniquePtr<Node>& node = it.m_node->parent == nullptr ? m_root : (it.m_node->parent->right == it.m_node ? it.m_node->parent->right : it.m_node->parent->left);
         if (node->left == nullptr && node->right == nullptr)
             node.clear();
-        else if (node->left == nullptr && node->right != nullptr || node->right == nullptr && node->left != nullptr)
+        else if ((node->left == nullptr && node->right != nullptr) || (node->right == nullptr && node->left != nullptr))
         {
             UniquePtr<Node> tmp = std::move(node->left == nullptr ? node->right : node->left);
             tmp->parent = node->parent;
@@ -290,6 +300,14 @@ public:
     {
         Set newSet = *this;
         newSet.remove(newSet.find(value));
+        return newSet;
+    }
+
+    Set operator + (const Set& other) const
+    {
+        Set newSet = *this;
+        for (const auto& element : *this)
+            newSet.insert(element);
         return newSet;
     }
 
