@@ -9,9 +9,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
-        compiler: [ clang, gcc, cl ]
-        
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        compiler: [clang, gcc, cl]
+
         exclude:
           - os: macos-latest
             compiler: cl
@@ -25,19 +25,19 @@ jobs:
         include:
           - os: macos-latest
             compiler: clang
-            c_compiler: $(brew --prefix llvm@15)/bin/clang
-            cpp_compiler: $(brew --prefix llvm@15)/bin/clang++
-            
+            c_compiler: clang
+            cpp_compiler: clang++
+
           - os: macos-latest
             compiler: gcc
             c_compiler: gcc-12
             cpp_compiler: g++-12
-            
+
           - os: ubuntu-latest
             compiler: clang
             c_compiler: clang-15
             cpp_compiler: clang++-15
-            
+
           - os: ubuntu-latest
             compiler: gcc
             c_compiler: gcc
@@ -46,20 +46,19 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-          
-        
+
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Configure CMake
-        run: > 
+        run: >
           cmake -B build -S ${{ github.workspace }}
           -DCMAKE_BUILD_TYPE=Release
           -DUTILSCPP_BUILD_TESTS=ON
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-          
+
       - name: Build
         run: cmake --build build
 
