@@ -306,7 +306,7 @@ public:
     Set operator + (const Set& other) const
     {
         Set newSet = *this;
-        for (const auto& element : *this)
+        for (const auto& element : other)
             newSet.insert(element);
         return newSet;
     }
