@@ -11,12 +11,13 @@
 # define UNIQUEPTR_HPP
 
 #include "UtilsCPP/Error.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 namespace utils
 {
 
 template<typename T>
-class UniquePtr
+class UTILSCPP_API UniquePtr
 {
 public:
     ERROR_DEFF(NullPointerError, "Dereferencing a null pointer");

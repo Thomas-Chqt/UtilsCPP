@@ -11,12 +11,13 @@
 # define FUNCTIONS_HPP
 
 #include <utility>
+#include "UtilsCPP/Macros.hpp"
 
 namespace utils
 {
 
 template<typename T>
-void swap(T& a, T& b)
+UTILSCPP_API void swap(T& a, T& b)
 {
     T tmp = std::move(b);
     b = std::move(a);

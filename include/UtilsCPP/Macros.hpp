@@ -13,15 +13,37 @@
     #elif defined(_MSC_VER)
         #define DEPRECATED(msg) __declspec(deprecated(msg))
     #else
-        #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+        #warning "DEPRECATED is not implemented for this compiler"
         #define DEPRECATED(msg)
     #endif
 #endif
 
 #ifndef UNREACHABLE
-    #if defined(_MSC_VER) && !defined(__clang__) // MSVC
-        #define UNREACHABLE __assume(false);
-    #else // GCC, Clang
+    #if defined(__GNUC__) || defined(__clang__)
         #define UNREACHABLE __builtin_unreachable();
+    #elif defined(_MSC_VER)
+        #define UNREACHABLE __assume(false);
+    #else
+        #warning "UNREACHABLE is not implemented for this compiler"
+        #define UNREACHABLE;
     #endif
 #endif
+
+#ifndef UTILSCPP_API
+    #if defined(__GNUC__) || defined(__clang__)
+        #ifdef UTILSCPP_API_IMPLEMENTATION
+            #define UTILSCPP_API __attribute__((visibility("default")))
+        #else
+            #define UTILSCPP_API
+        #endif
+    #elif defined(_MSC_VER)
+        #ifdef UTILSCPP_API_IMPLEMENTATION
+            #define UTILSCPP_API __declspec(dllexport)
+        #else
+            #define UTILSCPP_API __declspec(dllimport)
+        #endif
+    #else
+        #warning "UTILSCPP_API is not implemented for this compiler"
+        #define UTILSCPP_API
+    #endif
+#endif // UTILSCPP_API

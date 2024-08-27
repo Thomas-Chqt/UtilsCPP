@@ -7,25 +7,28 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-option(BUILD_SHARED_LIBS      "Build using shared libraries"          OFF)
+enable_testing()
+
+option(BUILD_SHARED_LIBS    "Build using shared libraries"          OFF)
 option(UTILSCPP_BUILD_TESTS "Inlcude UtilsCPP tests in the project" OFF)
 
 project(UtilsCPP)
-
 enable_language(CXX)
 
-add_library(UtilsCPP)
+add_library(UtilsCPP ${UTILSCPP_LIBRARY_TYPE})
+set_target_properties(UtilsCPP
+    PROPERTIES CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED   ON
+    CXX_VISIBILITY_PRESET   hidden
+)
 
-set_target_properties(UtilsCPP PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
-
-
-file(GLOB_RECURSE UTILSCPP_SRC "src/*.cpp" "src/*.tpp" "include/*.tpp" "src/*.hpp" "include/*.hpp")
-
+file(GLOB_RECURSE UTILSCPP_SRC "src/*" "include/*")
 target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})
 
 target_include_directories(UtilsCPP PRIVATE "src" PUBLIC "include")
 
+target_compile_definitions(UtilsCPP PRIVATE UTILSCPP_API_IMPLEMENTATION)
+
 if (UTILSCPP_BUILD_TESTS)
-    enable_testing()
     add_subdirectory(tests)
 endif()

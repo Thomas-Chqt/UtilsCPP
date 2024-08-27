@@ -14,6 +14,7 @@
 #include "UtilsCPP/Func.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/UniquePtr.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 #include <utility>
 
@@ -21,7 +22,7 @@ namespace utils
 {
 
 template<typename T>
-class Set
+class UTILSCPP_API Set
 {
 public:
     ERROR_DEFF(DuplicateElementError, "Element already in the set");

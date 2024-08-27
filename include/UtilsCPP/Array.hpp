@@ -14,6 +14,7 @@
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Func.hpp"
 #include "UtilsCPP/Functions.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 #include <initializer_list>
 #include <utility>
@@ -23,7 +24,7 @@ namespace utils
 {
 
 template <typename T>
-class Array
+class UTILSCPP_API Array
 {
 public:
     ERROR_DEFF(OutOfBoundError, "Out of bound access");

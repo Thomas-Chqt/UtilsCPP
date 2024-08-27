@@ -13,6 +13,7 @@
 #include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/UniquePtr.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 #include <ostream>
 #include <utility>
@@ -20,7 +21,7 @@
 namespace utils
 {
 
-class SharedPtrBase
+class UTILSCPP_API SharedPtrBase
 {
 public:
     virtual ~SharedPtrBase() = default;
