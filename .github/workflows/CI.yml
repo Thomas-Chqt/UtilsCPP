@@ -11,6 +11,7 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         compiler: [clang, gcc, cl]
+        library-type: [static, shared]
 
         exclude:
           - os: macos-latest
@@ -27,11 +28,6 @@ jobs:
             compiler: clang
             c_compiler: clang
             cpp_compiler: clang++
-
-          - os: macos-latest
-            compiler: gcc
-            c_compiler: gcc-12
-            cpp_compiler: g++-12
 
           - os: ubuntu-latest
             compiler: clang
@@ -52,8 +48,20 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure CMake
+        if: ${{ matrix.library-type == 'static' }}
         run: >
           cmake -B build -S ${{ github.workspace }}
+          -DBUILD_SHARED_LIBS=OFF
+          -DCMAKE_BUILD_TYPE=Release
+          -DUTILSCPP_BUILD_TESTS=ON
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+
+      - name: Configure CMake
+        if: ${{ matrix.library-type == 'shared' }}
+        run: >
+          cmake -B build -S ${{ github.workspace }}
+          -DBUILD_SHARED_LIBS=ON
           -DCMAKE_BUILD_TYPE=Release
           -DUTILSCPP_BUILD_TESTS=ON
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}

@@ -24,7 +24,7 @@ namespace utils
 {
 
 template <typename T>
-class UTILSCPP_API Array
+class Array
 {
 public:
     ERROR_DEFF(OutOfBoundError, "Out of bound access");

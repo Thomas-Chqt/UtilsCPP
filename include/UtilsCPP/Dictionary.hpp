@@ -20,7 +20,7 @@ namespace utils
 {
 
 template<typename Key, typename Value>
-class UTILSCPP_API Dictionary
+class Dictionary
 {
 public:
     ERROR_DEFF(KeyNoFoundError, "Key not in the dictionary");

@@ -17,7 +17,7 @@ namespace utils
 {
 
 template<typename T>
-UTILSCPP_API void swap(T& a, T& b)
+void swap(T& a, T& b)
 {
     T tmp = std::move(b);
     b = std::move(a);

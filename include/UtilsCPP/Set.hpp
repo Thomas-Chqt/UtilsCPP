@@ -22,7 +22,7 @@ namespace utils
 {
 
 template<typename T>
-class UTILSCPP_API Set
+class Set
 {
 public:
     ERROR_DEFF(DuplicateElementError, "Element already in the set");

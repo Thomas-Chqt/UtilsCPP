@@ -17,7 +17,7 @@ namespace utils
 {
 
 template<typename T>
-class UTILSCPP_API UniquePtr
+class UniquePtr
 {
 public:
     ERROR_DEFF(NullPointerError, "Dereferencing a null pointer");

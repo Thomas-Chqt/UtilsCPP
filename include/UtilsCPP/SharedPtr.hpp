@@ -21,7 +21,7 @@
 namespace utils
 {
 
-class UTILSCPP_API SharedPtrBase
+class SharedPtrBase
 {
 public:
     virtual ~SharedPtrBase() = default;

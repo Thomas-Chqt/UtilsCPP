@@ -16,7 +16,7 @@ namespace utils
 {
 
 template <typename>
-class UTILSCPP_API Func;
+class Func;
 
 template<typename ReturnValue, typename ... Args>
 class Func<ReturnValue(Args...)> 

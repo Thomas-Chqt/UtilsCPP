@@ -38,7 +38,7 @@ public:
     Error& operator = (const Error&) = default;
     Error& operator = (Error&&)      = default;
 
-    inline friend std::ostream& operator << (std::ostream& os, const Error& err) { return os << err.description(); }
+    UTILSCPP_API inline friend std::ostream& operator << (std::ostream& os, const Error& err) { return os << err.description(); }
 };
 
 }
