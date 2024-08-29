@@ -53,7 +53,7 @@ jobs:
         if: ${{ matrix.library-type == 'static' }}
         run: >
           cmake -B build -S ${{ github.workspace }}
-          -DUTILSCPP_BUILD_SHARED_LIBS=OFF
+          -DBUILD_SHARED_LIBS=OFF
           -DCMAKE_BUILD_TYPE=Release
           -DUTILSCPP_BUILD_TESTS=ON
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
@@ -63,7 +63,7 @@ jobs:
         if: ${{ matrix.library-type == 'shared' }}
         run: >
           cmake -B build -S ${{ github.workspace }}
-          -DUTILSCPP_BUILD_SHARED_LIBS=ON
+          -DBUILD_SHARED_LIBS=ON
           -DCMAKE_BUILD_TYPE=Release
           -DUTILSCPP_BUILD_TESTS=ON
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
