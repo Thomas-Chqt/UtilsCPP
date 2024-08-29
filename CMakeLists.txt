@@ -9,9 +9,8 @@ cmake_minimum_required(VERSION 3.16)
 
 enable_testing()
 
-option(BUILD_SHARED_LIBS          "Build using shared libraries"          OFF)
-option(UTILSCPP_BUILD_SHARED_LIBS "Build UtilsCPP as shared library"      OFF)
-option(UTILSCPP_BUILD_TESTS       "Inlcude UtilsCPP tests in the project" OFF)
+option(BUILD_SHARED_LIBS    "Build using shared libraries" OFF)
+option(UTILSCPP_BUILD_TESTS "Build UtilsCPP tests"         OFF)
 
 project(UtilsCPP)
 enable_language(CXX)
@@ -28,11 +27,7 @@ if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 endif()
 
-if(BUILD_SHARED_LIBS OR UTILSCPP_BUILD_SHARED_LIBS)
-    add_library(UtilsCPP SHARED)
-else()
-    add_library(UtilsCPP STATIC)
-endif()
+add_library(UtilsCPP)
 
 set_target_properties(UtilsCPP
     PROPERTIES CXX_STANDARD 11
@@ -46,7 +41,7 @@ target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})
 target_include_directories(UtilsCPP PRIVATE "src" PUBLIC "include")
 
 target_compile_definitions(UtilsCPP PRIVATE UTILSCPP_API_IMPLEMENTATION)
-if(BUILD_SHARED_LIBS OR UTILSCPP_BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
     target_compile_definitions(UtilsCPP INTERFACE UTILSCPP_DLL_LINK)
 endif()
 
