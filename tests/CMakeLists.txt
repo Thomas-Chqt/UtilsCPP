@@ -11,9 +11,9 @@ include(GoogleTest)
 add_executable(UtilsCPP_test)
 
 set_target_properties(UtilsCPP_test PROPERTIES
-    CXX_STANDARD             14
-    CXX_STANDARD_REQUIRED    ON
-    FOLDER                   "tests"
+    CXX_STANDARD          14
+    CXX_STANDARD_REQUIRED ON
+    FOLDER                "tests"
 )
 
 file(GLOB_RECURSE UTILSCPP_TEST_SRC "*.cpp" "*.tpp" "*.hpp")
@@ -28,13 +28,7 @@ FetchContent_Declare(googletest
 )
 set(BUILD_GMOCK   OFF)
 set(INSTALL_GTEST OFF)
-if(BUILD_SHARED_LIBS)
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build using shared libraries" FORCE)
-    FetchContent_MakeAvailable(googletest)
-    set(BUILD_SHARED_LIBS ON CACHE BOOL "Build using shared libraries" FORCE)
-else()
-    FetchContent_MakeAvailable(googletest)
-endif()
+FetchContent_MakeAvailable(googletest)
 set_target_properties(gtest PROPERTIES FOLDER "dependencies")
 set_target_properties(gtest_main PROPERTIES FOLDER "dependencies")
 
