@@ -14,7 +14,6 @@
 #include "UtilsCPP/Func.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/UniquePtr.hpp"
-#include "UtilsCPP/Macros.hpp"
 
 #include <utility>
 
