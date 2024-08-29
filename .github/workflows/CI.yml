@@ -16,6 +16,8 @@ jobs:
         exclude:
           - os: macos-latest
             compiler: cl
+          - os: macos-latest
+            compiler: gcc
           - os: ubuntu-latest
             compiler: cl
           - os: windows-latest
