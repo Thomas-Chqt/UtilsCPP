@@ -10,8 +10,6 @@
 #ifndef FUNC_HPP
 # define FUNC_HPP
 
-#include "UtilsCPP/Macros.hpp"
-
 namespace utils
 {
 
