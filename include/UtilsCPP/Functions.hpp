@@ -11,6 +11,7 @@
 # define FUNCTIONS_HPP
 
 #include <utility>
+#include "UtilsCPP/Macros.hpp"
 
 namespace utils
 {

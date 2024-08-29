@@ -12,11 +12,12 @@
 
 #include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/String.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 namespace utils
 {
 
-class RuntimeError : public Error
+class UTILSCPP_API RuntimeError : public Error
 {
 public:
     RuntimeError()                        = delete;

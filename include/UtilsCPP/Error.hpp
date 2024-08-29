@@ -12,6 +12,7 @@
 
 #include <ostream>
 #include <exception>
+#include "UtilsCPP/Macros.hpp"
 
 #define ERR_DESC(str) inline const char* description() const override { return str; }
 #define ERROR_DEFF(Type, desc) struct Type : public utils::Error { ERR_DESC(desc) }
@@ -19,7 +20,7 @@
 namespace utils
 {
 
-class Error : public std::exception
+class UTILSCPP_API Error : public std::exception
 {
 public:
     Error(const Error&) = default;
@@ -37,7 +38,7 @@ public:
     Error& operator = (const Error&) = default;
     Error& operator = (Error&&)      = default;
 
-    inline friend std::ostream& operator << (std::ostream& os, const Error& err) { return os << err.description(); }
+    UTILSCPP_API inline friend std::ostream& operator << (std::ostream& os, const Error& err) { return os << err.description(); }
 };
 
 }

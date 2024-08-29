@@ -13,6 +13,7 @@
 #include "UtilsCPP/Error.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/UniquePtr.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 #include <ostream>
 #include <utility>

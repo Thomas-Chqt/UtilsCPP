@@ -11,6 +11,7 @@
 # define UNIQUEPTR_HPP
 
 #include "UtilsCPP/Error.hpp"
+#include "UtilsCPP/Macros.hpp"
 
 namespace utils
 {

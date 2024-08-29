@@ -7,25 +7,56 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-option(BUILD_SHARED_LIBS      "Build using shared libraries"          OFF)
-option(UTILSCPP_BUILD_TESTS "Inlcude UtilsCPP tests in the project" OFF)
+enable_testing()
+
+option(BUILD_SHARED_LIBS          "Build using shared libraries"          OFF)
+option(UTILSCPP_BUILD_SHARED_LIBS "Build UtilsCPP as shared library"      OFF)
+option(UTILSCPP_BUILD_TESTS       "Inlcude UtilsCPP tests in the project" OFF)
 
 project(UtilsCPP)
-
 enable_language(CXX)
 
-add_library(UtilsCPP)
+if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+endif()
 
-set_target_properties(UtilsCPP PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
+if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+endif()
 
+if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+endif()
 
-file(GLOB_RECURSE UTILSCPP_SRC "src/*.cpp" "src/*.tpp" "include/*.tpp" "src/*.hpp" "include/*.hpp")
+if(BUILD_SHARED_LIBS OR UTILSCPP_BUILD_SHARED_LIBS)
+    add_library(UtilsCPP SHARED)
+else()
+    add_library(UtilsCPP STATIC)
+endif()
 
+set_target_properties(UtilsCPP
+    PROPERTIES CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED   ON
+    CXX_VISIBILITY_PRESET   hidden
+)
+
+file(GLOB_RECURSE UTILSCPP_SRC "src/*" "include/*")
 target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})
 
 target_include_directories(UtilsCPP PRIVATE "src" PUBLIC "include")
 
+target_compile_definitions(UtilsCPP PRIVATE UTILSCPP_API_IMPLEMENTATION)
+if(BUILD_SHARED_LIBS OR UTILSCPP_BUILD_SHARED_LIBS)
+    target_compile_definitions(UtilsCPP INTERFACE UTILSCPP_DLL_LINK)
+endif()
+
 if (UTILSCPP_BUILD_TESTS)
-    enable_testing()
     add_subdirectory(tests)
 endif()
+
+install(TARGETS UtilsCPP
+    RUNTIME DESTINATION "bin"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+)
+install(DIRECTORY "include/" DESTINATION "include")

@@ -12,12 +12,13 @@
 
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/Array.hpp"
+#include "UtilsCPP/Macros.hpp"
 #include <istream>
 
 namespace utils
 {
 
-class String
+class UTILSCPP_API String
 {
 public:
     using Size  = uint64;
@@ -77,7 +78,7 @@ public:
     inline operator       char* ()       { return (      char*)m_characters; }
     inline operator const char* () const { return (const char*)m_characters; }
 
-    friend String operator + (const String& s1, const String& s2);
+    friend UTILSCPP_API String operator + (const String& s1, const String& s2);
 };
 
 }
