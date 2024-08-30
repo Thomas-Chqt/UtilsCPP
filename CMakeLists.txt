@@ -48,3 +48,10 @@ endif()
 if (UTILSCPP_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
+
+install(TARGETS UtilsCPP
+    RUNTIME DESTINATION "bin"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+)
+install(DIRECTORY "include/" DESTINATION "include")
