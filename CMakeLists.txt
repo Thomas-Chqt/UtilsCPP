@@ -9,8 +9,9 @@ cmake_minimum_required(VERSION 3.16)
 
 enable_testing()
 
-option(BUILD_SHARED_LIBS    "Build using shared libraries" OFF)
-option(UTILSCPP_BUILD_TESTS "Build UtilsCPP tests"         OFF)
+option(BUILD_SHARED_LIBS    "Build using shared libraries"    OFF)
+option(UTILSCPP_BUILD_TESTS "Build UtilsCPP tests"            OFF)
+option(UTILSCPP_INSTALL     "Enable UtilsCPP install command" ON)
 
 project(UtilsCPP)
 enable_language(CXX)
@@ -49,9 +50,11 @@ if (UTILSCPP_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
-install(TARGETS UtilsCPP
-    RUNTIME DESTINATION "bin"
-    LIBRARY DESTINATION "lib"
-    ARCHIVE DESTINATION "lib"
-)
-install(DIRECTORY "include/" DESTINATION "include")
+if(UTILSCPP_INSTALL)
+    install(TARGETS UtilsCPP
+        RUNTIME DESTINATION "bin"
+        LIBRARY DESTINATION "lib"
+        ARCHIVE DESTINATION "lib"
+    )
+    install(DIRECTORY "include/" DESTINATION "include")
+endif()
