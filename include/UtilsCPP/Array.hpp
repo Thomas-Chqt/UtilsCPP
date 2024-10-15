@@ -180,11 +180,11 @@ public:
     void remove(const Iterator& it)
     {
         Iterator curr = it;
-        Iterator id_end = end();
-        if (curr == id_end)
+        Iterator it_end = end();
+        if (curr == it_end)
             return;
         Iterator it_next = ++Iterator(curr);
-        while (it_next != id_end)
+        while (it_next != it_end)
             swap(*(curr++), *(it_next++));
         (*curr).~Element();
         --m_length;
