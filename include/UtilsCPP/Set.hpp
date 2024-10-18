@@ -307,7 +307,7 @@ public:
     {
         for (const auto& element : rhs)
             insert(element);
-        return &this;
+        return *this;
     }
 
     Set operator + (const Set& rhs) const
