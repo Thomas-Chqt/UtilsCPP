@@ -51,6 +51,7 @@ public:
 
     inline bool contain(const Key& key) const { return m_data.contain(key); }
     inline Size size() const { return m_data.size(); }
+    inline bool isEmpty() const { return m_data.isEmpty(); }
 
     inline       Iterator begin()       { return m_data.begin(); }
     inline const_Iterator begin() const { return m_data.begin(); }
