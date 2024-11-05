@@ -15,6 +15,8 @@
 #include "UtilsCPP/Macros.hpp"
 #include <istream>
 
+#define SAFECPY(dst) safecpy(dst, sizeof(dst))
+
 namespace utils
 {
 
@@ -43,7 +45,6 @@ public:
     inline Size capacity() const { return m_characters.capacity(); } // capacity include the \0 character 
     inline bool isEmpty()  const { return (m_characters.length() - 1) == 0; }
 
-
     inline       Iterator begin()       { return   m_characters.begin(); }
     inline const_Iterator begin() const { return   m_characters.begin(); }
     inline       Iterator end()         { return --m_characters.end();   }
@@ -53,6 +54,8 @@ public:
 
     Index lastIndexOf(char c) const;
     String substr(Index start, Size len) const;
+
+    void safecpy(char* dst, uint64 buffSize) const;
 
     ~String() = default;
 
