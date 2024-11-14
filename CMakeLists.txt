@@ -13,20 +13,14 @@ option(BUILD_SHARED_LIBS    "Build using shared libraries"    OFF)
 option(UTILSCPP_BUILD_TESTS "Build UtilsCPP tests"            OFF)
 option(UTILSCPP_INSTALL     "Enable UtilsCPP install command" ON)
 
+if(BUILD_SHARED_LIBS)
+    set(UTILSCPP_API_EXPORT ON CACHE BOOL "Export all the symbols" FORCE)
+else()
+    option(UTILSCPP_API_EXPORT "Export all the symbols" OFF)
+endif()
+
 project(UtilsCPP)
 enable_language(CXX)
-
-if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-endif()
-
-if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-endif()
-
-if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-endif()
 
 add_library(UtilsCPP)
 
@@ -41,9 +35,11 @@ target_sources(UtilsCPP PRIVATE ${UTILSCPP_SRC})
 
 target_include_directories(UtilsCPP PRIVATE "src" PUBLIC "include")
 
-target_compile_definitions(UtilsCPP PRIVATE UTILSCPP_API_IMPLEMENTATION)
+if(UTILSCPP_API_EXPORT)
+    target_compile_definitions(UtilsCPP PRIVATE "UTILSCPP_API_EXPORT")
+endif()
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(UtilsCPP INTERFACE UTILSCPP_DLL_LINK)
+    target_compile_definitions(UtilsCPP INTERFACE "UTILSCPP_API_IMPORT")
 endif()
 
 if (UTILSCPP_BUILD_TESTS)
