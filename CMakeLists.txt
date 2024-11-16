@@ -42,7 +42,7 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(UtilsCPP INTERFACE "UTILSCPP_API_IMPORT")
 endif()
 
-if (UTILSCPP_BUILD_TESTS)
+if (UTILSCPP_BUILD_TESTS AND NOT (BUILD_SHARED_LIBS AND WIN32))
     add_subdirectory(tests)
 endif()
 
