@@ -303,11 +303,17 @@ public:
         return newSet;
     }
 
-    Set operator + (const Set& other) const
+    Set& operator += (const Set& rhs)
+    {
+        for (const auto& element : rhs)
+            insert(element);
+        return *this;
+    }
+
+    Set operator + (const Set& rhs) const
     {
         Set newSet = *this;
-        for (const auto& element : other)
-            newSet.insert(element);
+        newSet += rhs;
         return newSet;
     }
 

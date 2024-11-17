@@ -53,11 +53,11 @@ cmake -S . -B build
 cmake --build build
 ```
 
-| CMake Options         | Values   | Description                |
-|-----------------------|----------|----------------------------|
-| `BUILD_SHARED_LIBS`   | ON / OFF | Build as shared library    |
-| `UTILSCPP_BUILD_TESTS`| ON / OFF | Build the test executable  |
-| `UTILSCPP_INSTALL`    | ON / OFF | Enable the install command |
+| CMake Options         | Default Value | Description                |
+|-----------------------|---------------|----------------------------|
+| `BUILD_SHARED_LIBS`   |      OFF      | Build as shared library    |
+| `UTILSCPP_BUILD_TESTS`|      OFF      | Build the test executable  |
+| `UTILSCPP_INSTALL`    |      ON       | Enable the install command |
 
 Learning
 --------

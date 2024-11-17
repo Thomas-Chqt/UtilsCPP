@@ -28,11 +28,11 @@
     #define UNREACHABLE;
 #endif
 
-#if (defined(__GNUC__) || defined(__clang__)) && defined(UTILSCPP_API_IMPLEMENTATION)
+#if (defined(__GNUC__) || defined(__clang__)) && defined(UTILSCPP_API_EXPORT)
     #define UTILSCPP_API __attribute__((visibility("default")))
-#elif defined(_MSC_VER) && defined(UTILSCPP_API_IMPLEMENTATION)
+#elif defined(_MSC_VER) && defined(UTILSCPP_API_EXPORT)
     #define UTILSCPP_API __declspec(dllexport)
-#elif defined(_MSC_VER) && defined(UTILSCPP_DLL_LINK)
+#elif defined(_MSC_VER) && defined(UTILSCPP_API_IMPORT)
     #define UTILSCPP_API __declspec(dllimport)
 #else
     #define UTILSCPP_API

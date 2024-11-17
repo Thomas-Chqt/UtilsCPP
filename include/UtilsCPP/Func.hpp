@@ -141,7 +141,10 @@ public:
         if (&rhs != this)
         {
             delete m_callable;
-            m_callable = rhs.m_callable->clone();
+            if (rhs.m_callable)
+                m_callable = rhs.m_callable->clone();
+            else
+                m_callable = nullptr;
         }
         return *this;
     }

@@ -79,6 +79,14 @@ String String::substr(Index start, Size len) const // NOLINT(bugprone-easily-swa
     return newStr;
 }
 
+void String::safecpy(char* dst, uint64 buffSize) const
+{
+    uint64 i = 0;
+    for (; i < buffSize - 1 && i < length(); i++)
+        dst[i] = m_characters[i];
+    dst[i] = '\0';
+}
+
 String operator + (const String& s1, const String& s2)
 {
     String output(s1.length() + s2.length());

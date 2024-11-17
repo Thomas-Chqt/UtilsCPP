@@ -24,6 +24,8 @@ jobs:
             compiler: clang
           - os: windows-latest
             compiler: gcc
+          - os: windows-latest
+            library-type: shared
 
         include:
           - os: macos-latest

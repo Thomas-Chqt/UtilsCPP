@@ -51,6 +51,7 @@ public:
 
     inline bool contain(const Key& key) const { return m_data.contain(key); }
     inline Size size() const { return m_data.size(); }
+    inline bool isEmpty() const { return m_data.isEmpty(); }
 
     inline       Iterator begin()       { return m_data.begin(); }
     inline const_Iterator begin() const { return m_data.begin(); }
@@ -61,6 +62,7 @@ public:
     inline Iterator insert(const Key& key, Value&& val) { return m_data.insert(KeyValPair{key, std::move(val)}); }
 
     inline void remove(const Key& key) { m_data.remove(m_data.find(key)); }
+    inline void remove(const Iterator& it) { m_data.remove(it); }
 
     inline void clear() { m_data.clear(); }
 
