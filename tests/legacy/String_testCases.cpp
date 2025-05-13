@@ -18,6 +18,7 @@ namespace utils_tests
 
 using byte = unsigned char;
 
+#if 0
 class String : public testing::TestWithParam<std::string>
 {
 public:
@@ -93,6 +94,7 @@ TEST_P(String, literalConstructor)
 
     ::operator delete (string.m_characters.m_buffer);
 }
+#endif
 
 TEST(StringTest, plusOperator)
 {

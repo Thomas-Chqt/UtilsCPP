@@ -10,7 +10,9 @@
 #ifndef UTILSCPP_MACROS_HPP
 #define UTILSCPP_MACROS_HPP
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined (__cpp_attributes) && __has_attribute(deprecated)
+    #define DEPRECATED(msg) [[deprecated(msg)]]
+#elif defined(__GNUC__) || defined(__clang__)
     #define DEPRECATED(msg) __attribute__((deprecated(msg)))
 #elif defined(_MSC_VER)
     #define DEPRECATED(msg) __declspec(deprecated(msg))
@@ -28,14 +30,22 @@
     #define UNREACHABLE;
 #endif
 
-#if (defined(__GNUC__) || defined(__clang__)) && defined(UTILSCPP_API_EXPORT)
-    #define UTILSCPP_API __attribute__((visibility("default")))
-#elif defined(_MSC_VER) && defined(UTILSCPP_API_EXPORT)
-    #define UTILSCPP_API __declspec(dllexport)
-#elif defined(_MSC_VER) && defined(UTILSCPP_API_IMPORT)
-    #define UTILSCPP_API __declspec(dllimport)
+#ifdef UTL_API_EXPORT
+    #ifdef _WIN32
+        #define UTL_API __declspec(dllexport)
+    #else
+        #define UTL_API __attribute__((visibility("default")))
+    #endif
+#elif UTL_API_IMPORT
+    #ifdef _WIN32
+        #define UTL_API __declspec(dllimport)
+    #else
+        #define UTL_API
+    #endif
 #else
-    #define UTILSCPP_API
+    #define UTL_API
 #endif
+
+#define UTILSCPP_API UTL_API // backward compatibility
 
 #endif // UTILSCPP_MACROS_HPP

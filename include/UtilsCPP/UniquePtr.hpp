@@ -12,7 +12,7 @@
 
 #include "UtilsCPP/Error.hpp"
 
-namespace utils
+namespace utl
 {
 
 template<typename T>
@@ -114,5 +114,10 @@ UniquePtr<T> makeUnique(ARGS&&... args)
 }
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // UNIQUEPTR_HPP

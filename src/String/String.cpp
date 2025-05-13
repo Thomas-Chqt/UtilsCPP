@@ -13,8 +13,9 @@
 #include <cstring>
 #include <istream>
 #include <fstream>
+#include <string>
 
-namespace utils
+namespace utl
 {
 
 String::String() : m_characters(1, '\0')
@@ -27,7 +28,7 @@ String::String(const char* literal) : m_characters(literal, literal + (std::strl
 
 String::String(Size length, char c) : m_characters(length + 1, c)
 {
-    m_characters.last() = '\0';
+    m_characters.back() = '\0';
 }
 
 String String::contentOf(std::istream& istream)
@@ -52,14 +53,14 @@ String String::contentOfFile(const String& path)
 
 String String::fromUInt(uint32 nbr) // NOLINT(misc-no-recursion)
 {
-    if (nbr / 10 == 0) // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+    if (nbr / 10 == 0)
         return String(1, (char)(nbr + '0'));
-    return String::fromUInt(nbr / 10) + String(1, (char)(nbr % 10 + '0')); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+    return String::fromUInt(nbr / 10) + String(1, (char)(nbr % 10 + '0'));
 }
 
 void String::append(char c)
 {
-    m_characters.last() = c;
+    m_characters.back() = c;
     m_characters.append('\0');
 }
 
@@ -71,7 +72,7 @@ String::Index String::lastIndexOf(char c) const
     return idx;
 }
 
-String String::substr(Index start, Size len) const // NOLINT(bugprone-easily-swappable-parameters)
+String String::substr(Index start, Size len) const
 {
     String newStr(len, '\0');
     for (Index idx = 0; idx < len; idx++)
@@ -95,4 +96,4 @@ String operator + (const String& s1, const String& s2)
     return output;
 }
 
-}
+} // namespace utl

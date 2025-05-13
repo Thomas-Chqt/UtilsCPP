@@ -14,7 +14,7 @@
 #include "UtilsCPP/String.hpp"
 #include "UtilsCPP/Macros.hpp"
 
-namespace utils
+namespace utl
 {
 
 class UTILSCPP_API RuntimeError : public Error
@@ -24,7 +24,7 @@ public:
     RuntimeError(const RuntimeError&)     = default;
     RuntimeError(RuntimeError&&) noexcept = default;
 
-    explicit RuntimeError(String);
+    explicit RuntimeError(String&&);
 
     inline const char* description() const override { return (const char*)m_description; }
 
@@ -38,7 +38,11 @@ public:
     RuntimeError& operator = (RuntimeError&&)      = default;
 };
 
-
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // RUNTIMEERROR_HPP

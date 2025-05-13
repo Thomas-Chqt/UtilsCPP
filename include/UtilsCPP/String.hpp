@@ -17,7 +17,7 @@
 
 #define SAFECPY(dst) safecpy(dst, sizeof(dst))
 
-namespace utils
+namespace utl
 {
 
 class UTILSCPP_API String
@@ -41,9 +41,9 @@ public:
     static String contentOfFile(const String& path);
     static String fromUInt(uint32);
 
-    inline Size length()   const { return m_characters.length() - 1; }
+    inline Size length()   const { return m_characters.size() - 1; }
     inline Size capacity() const { return m_characters.capacity(); } // capacity include the \0 character 
-    inline bool isEmpty()  const { return (m_characters.length() - 1) == 0; }
+    inline bool isEmpty()  const { return (m_characters.size() - 1) == 0; }
 
     inline       Iterator begin()       { return   m_characters.begin(); }
     inline const_Iterator begin() const { return   m_characters.begin(); }
@@ -85,5 +85,10 @@ public:
 };
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // STRING_HPP

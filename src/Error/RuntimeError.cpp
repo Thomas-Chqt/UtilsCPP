@@ -8,13 +8,13 @@
  */
 
 #include "UtilsCPP/RuntimeError.hpp"
-
+#include "UtilsCPP/String.hpp"
 #include <utility>
 
-namespace utils
+namespace utl
 {
 
-RuntimeError::RuntimeError(String desc) : m_description(std::move(desc))
+RuntimeError::RuntimeError(String&& desc) : m_description(std::move(desc))
 {
 }
 

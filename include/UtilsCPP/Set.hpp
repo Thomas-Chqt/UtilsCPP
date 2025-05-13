@@ -14,10 +14,10 @@
 #include "UtilsCPP/Func.hpp"
 #include "UtilsCPP/Types.hpp"
 #include "UtilsCPP/UniquePtr.hpp"
-
+#include <initializer_list>
 #include <utility>
 
-namespace utils
+namespace utl
 {
 
 template<typename T>
@@ -41,8 +41,8 @@ public:
         Func<UniquePtr<Node>(const UniquePtr<Node>&)> cloneSubTree = [&](const UniquePtr<Node>& src)
         {
             if (src == nullptr)
-                return utils::UniquePtr<Node>();
-            utils::UniquePtr<Node> newNode = utils::UniquePtr<Node>(new Node(src->value));
+                return utl::UniquePtr<Node>();
+            utl::UniquePtr<Node> newNode = utl::UniquePtr<Node>(new Node(src->value));
             newNode->left = cloneSubTree(src->left);
             if (newNode->left != nullptr)
                 newNode->left->parent = newNode;
@@ -414,5 +414,10 @@ public:
 };
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // SET_HPP

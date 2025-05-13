@@ -10,7 +10,7 @@
 #ifndef FUNC_HPP
 # define FUNC_HPP
 
-namespace utils
+namespace utl
 {
 
 template <typename>
@@ -164,5 +164,10 @@ public:
 };
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // FUNC_HPP

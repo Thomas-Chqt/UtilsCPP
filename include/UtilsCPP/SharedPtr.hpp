@@ -17,7 +17,7 @@
 #include <ostream>
 #include <utility>
 
-namespace utils
+namespace utl
 {
 
 class SharedPtrBase
@@ -189,5 +189,10 @@ SharedPtr<T> makeShared(ARGS&&... args)
 }
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // SHAREDPTR_HPP

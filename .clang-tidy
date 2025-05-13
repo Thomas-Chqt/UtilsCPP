@@ -1,0 +1,23 @@
+Checks:
+  - -*
+
+  - bugprone-*
+  - -bugprone-easily-swappable-parameters
+  
+  - clang-analyzer-*
+  
+  - concurrency-*
+  
+  - misc-*
+  - -misc-non-private-member-variables-in-classes
+  
+  - modernize-*
+  - -modernize-use-trailing-return-type
+  - -modernize-avoid-c-arrays
+  - -modernize-use-nodiscard
+  
+  - objc-*
+  
+  - performance-*
+  
+  - portability-*

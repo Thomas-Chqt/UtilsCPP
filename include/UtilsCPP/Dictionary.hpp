@@ -16,7 +16,7 @@
 
 #include <utility>
 
-namespace utils
+namespace utl
 {
 
 template<typename Key, typename Value>
@@ -108,5 +108,10 @@ public:
 };
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // DICTIONARY_HPP

@@ -15,9 +15,9 @@
 #include "UtilsCPP/Macros.hpp"
 
 #define ERR_DESC(str) inline const char* description() const override { return str; }
-#define ERROR_DEFF(Type, desc) struct Type : public utils::Error { ERR_DESC(desc) }
+#define ERROR_DEFF(Type, desc) struct Type : public utl::Error { ERR_DESC(desc) }
 
-namespace utils
+namespace utl
 {
 
 class UTILSCPP_API Error : public std::exception
@@ -42,5 +42,10 @@ public:
 };
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // ERROR_HPP

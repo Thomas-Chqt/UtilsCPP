@@ -12,11 +12,11 @@
 
 #include <utility>
 
-namespace utils
+namespace utl
 {
 
 template<typename T>
-void swap(T& a, T& b)
+void swap(T& a, T& b) noexcept
 {
     T tmp = std::move(b);
     b = std::move(a);
@@ -24,5 +24,10 @@ void swap(T& a, T& b)
 }
 
 }
+
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
 
 #endif // FUNCTIONS_HPP

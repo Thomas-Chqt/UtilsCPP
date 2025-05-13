@@ -7,19 +7,26 @@
  * ---------------------------------------------------
  */
 
-#ifndef UCPP_TYPES_HPP
-# define UCPP_TYPES_HPP
+#ifndef UTL_TYPES_HPP
+#define UTL_TYPES_HPP
+
+#include <cstdint>
 
 static_assert(sizeof(unsigned char) == 1, "unsigned char is not 1 byte");
 
-namespace utils
+namespace utl
 {
-    using uint8  = unsigned char;
-    using uint16 = unsigned short;
-    using uint32 = unsigned int;
-    using uint64 = unsigned long;
+    using uint8  = std::uint8_t;
+    using uint16 = std::uint16_t;
+    using uint32 = std::uint32_t;
+    using uint64 = std::uint64_t;
 
     using byte = uint8;
 }
 
-#endif // UCPP_TYPES_HPP
+#ifndef UTILS_NAMESPACE
+#define UTILS_NAMESPACE
+namespace utils = utl; // NOLINT
+#endif
+
+#endif // UTL_TYPES_HPP
