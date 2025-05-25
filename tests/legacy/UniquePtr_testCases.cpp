@@ -19,25 +19,18 @@ template<typename T>
 class UniquePtr : public testing::Test
 {
 public:
-    UniquePtr() : pointer(*reinterpret_cast<utils::UniquePtr<T>*>(pointerBytes)),
-                  nullPointer(*reinterpret_cast<utils::UniquePtr<T>*>(nullPointerBytes))
+    UniquePtr() : pointer(new T),
+                  nullPointer(nullptr)
     {
-        pointer.m_pointer = new T();
-        nullPointer.m_pointer = nullptr;
     }
 
     ~UniquePtr()
     {
-        delete pointer.m_pointer;
     }
 
-private:
-    unsigned char pointerBytes[sizeof(utils::UniquePtr<T>)] = {};
-    unsigned char nullPointerBytes[sizeof(utils::UniquePtr<T>)] = {};
-
 protected:
-    utils::UniquePtr<T>& pointer;
-    utils::UniquePtr<T>& nullPointer;
+    utils::UniquePtr<T> pointer;
+    utils::UniquePtr<T> nullPointer;
 };
 
 using TestedTypes = ::testing::Types<
@@ -50,13 +43,9 @@ TYPED_TEST_SUITE(UniquePtr, TestedTypes);
 TYPED_TEST(UniquePtr, defaultConstructor)
 {
     using UniquePtr = utils::UniquePtr<TypeParam>;
-    using Type      = typename UniquePtr::Type;
 
-    unsigned char bytes[sizeof(UniquePtr)] = {};
-    UniquePtr& pointer = *reinterpret_cast<UniquePtr*>(bytes);
-
-    new (&pointer) UniquePtr();
-    EXPECT_EQ(pointer.m_pointer, nullptr);
+    UniquePtr pointer;
+    EXPECT_EQ(pointer.get(), nullptr);
 }
 
 TYPED_TEST(UniquePtr, copyConstructor)
@@ -74,16 +63,11 @@ TYPED_TEST(UniquePtr, moveConstructor)
 
     for (auto& ptr : std::vector<UniquePtr*>{ &this->pointer, &this->nullPointer })
     {
-        unsigned char bytes[sizeof(UniquePtr)] = {};
-        UniquePtr& pointer = *reinterpret_cast<UniquePtr*>(bytes);
+        Type* rawPtr = ptr->get();
+        UniquePtr pointer = UniquePtr(std::move(*ptr));
 
-        Type* rawPtr = (*ptr).m_pointer;
-        new (&pointer) UniquePtr(std::move(*ptr));
-
-        EXPECT_EQ(pointer.m_pointer, rawPtr);
-        EXPECT_EQ((*ptr).m_pointer,  nullptr);
-
-        delete pointer.m_pointer;
+        EXPECT_EQ(pointer.get(), rawPtr);
+        EXPECT_EQ(ptr->get(),  nullptr);
     }
 }
 
@@ -92,10 +76,10 @@ TYPED_TEST(UniquePtr, ptrConstructor)
     using UniquePtr = utils::UniquePtr<TypeParam>;
     using Type      = typename UniquePtr::Type;
 
-    EXPECT_NE(UniquePtr(new TypeParam).m_pointer, nullptr);
+    EXPECT_NE(UniquePtr(new TypeParam).get(), nullptr);
 
     for (auto& data : { random<TypeParam>(), random<TypeParam>(), random<TypeParam>() })
-        EXPECT_EQ(*UniquePtr(new TypeParam(data)).m_pointer, data);
+        EXPECT_EQ(*UniquePtr(new TypeParam(data)).get(), data);
 }
 
 TEST(UniquePtr, staticCast)
@@ -118,9 +102,9 @@ TYPED_TEST(UniquePtr, clear)
     using Type      = typename UniquePtr::Type;
 
     this->pointer.clear();
-    EXPECT_EQ(this->pointer.m_pointer, nullptr);
+    EXPECT_EQ(this->pointer.get(), nullptr);
     this->nullPointer.clear();
-    EXPECT_EQ(this->nullPointer.m_pointer, nullptr);
+    EXPECT_EQ(this->nullPointer.get(), nullptr);
 }
 
 TYPED_TEST(UniquePtr, copyAssignementOperator)
@@ -138,29 +122,21 @@ TYPED_TEST(UniquePtr, moveAssignementOperator)
 
     for (auto& ptr : std::vector<UniquePtr*>{ &this->pointer, &this->nullPointer })
     {{
-        unsigned char bytes[sizeof(UniquePtr)] = {};
-        UniquePtr& pointer = *reinterpret_cast<UniquePtr*>(bytes);
-        pointer.m_pointer = nullptr;
+        UniquePtr pointer = UniquePtr(nullptr);
 
-        Type* rawPtr = (*ptr).m_pointer;
+        Type* rawPtr = (*ptr).get();
         pointer = std::move(*ptr);
 
-        EXPECT_EQ(pointer.m_pointer, rawPtr);
-        EXPECT_EQ((*ptr).m_pointer,  nullptr);
-
-        delete pointer.m_pointer;
+        EXPECT_EQ(pointer.get(), rawPtr);
+        EXPECT_EQ((*ptr).get(),  nullptr);
     }{
-        unsigned char bytes[sizeof(UniquePtr)] = {};
-        UniquePtr& pointer = *reinterpret_cast<UniquePtr*>(bytes);
-        pointer.m_pointer = new TypeParam(random<TypeParam>());
+        UniquePtr pointer = UniquePtr(new TypeParam(random<TypeParam>()));
 
-        Type* rawPtr = (*ptr).m_pointer;
+        Type* rawPtr = (*ptr).get();
         pointer = std::move(*ptr);
 
-        EXPECT_EQ(pointer.m_pointer, rawPtr);
-        EXPECT_EQ((*ptr).m_pointer,  nullptr);
-
-        delete pointer.m_pointer;
+        EXPECT_EQ(pointer.get(), rawPtr);
+        EXPECT_EQ((*ptr).get(),  nullptr);
     }}
 }
 

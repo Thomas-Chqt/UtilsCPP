@@ -8,115 +8,75 @@
  */
 
 #ifndef UNIQUEPTR_HPP
-# define UNIQUEPTR_HPP
+#define UNIQUEPTR_HPP
 
+#include "UtilsCPP/Macros.hpp"
+#include "UtilsCPP/memory.hpp"
 #include "UtilsCPP/Error.hpp"
 
 namespace utl
 {
 
 template<typename T>
-class UniquePtr
+    requires(!std::is_array_v<T>)
+class UniquePtr : public utl::unique_ptr<T>
 {
 public:
     ERROR_DEFF(NullPointerError, "Dereferencing a null pointer");
 
-private:
-    template<typename Y> friend class UniquePtr;
-
 public:
     using Type = T;
 
+private:
+    using unique_ptr = unique_ptr<T>;
+
 public:
-    UniquePtr()                 = default;
+    using unique_ptr::unique_ptr;
+
+    UniquePtr() = default;
     UniquePtr(const UniquePtr&) = delete;
-
-    UniquePtr(UniquePtr&& mv) noexcept : m_pointer(mv.m_pointer)
-    {
-        mv.m_pointer = nullptr;
-    }
-
-    explicit UniquePtr(Type* ptr) : m_pointer(ptr) 
-    {
-    }
+    UniquePtr(UniquePtr&& mv) noexcept : unique_ptr(std::move(mv)) {}
 
     template<typename Y>
-    UniquePtr<Y> staticCast()
-    {
-        UniquePtr<Y> output;
+    DEPRECATED("use move constructor") inline UniquePtr<Y> staticCast() { return UniquePtr<Y>(static_cast<Y*>(unique_ptr::release())); }
 
-        output.m_pointer = static_cast<Y*>(m_pointer);
-        m_pointer = nullptr;
+    DEPRECATED("use release") inline Type* getOwnership() { return unique_ptr::release(); }
 
-        return output;
-    }
+    DEPRECATED("use reset") inline void clear() { return unique_ptr::reset(nullptr); }
 
-    Type* getOwnership()
-    {
-        Type* tmp = m_pointer;
-        m_pointer = nullptr;
-        return tmp;
-    }
-
-    void clear()
-    {
-        delete m_pointer;
-        m_pointer = nullptr;
-    }
-    
-    ~UniquePtr()
-    {
-        clear();
-    }
-
-#ifdef GOOGLETEST_INCLUDE_GTEST_GTEST_H_
-public:
-#else
-private:
-#endif
-    Type* m_pointer = nullptr;
+    ~UniquePtr() = default;
 
 public:
-    UniquePtr& operator = (const UniquePtr&) = delete;
+    UniquePtr& operator=(const UniquePtr&) = delete;
 
-    UniquePtr& operator = (UniquePtr&& rhs) noexcept
+    UniquePtr& operator=(UniquePtr&& rhs) noexcept
     {
-        if (rhs != *this)
-        {
-            clear();
-            m_pointer = rhs.m_pointer;
-            rhs.m_pointer = nullptr;
-        }
+        (void)unique_ptr::operator=(std::move(rhs));
         return *this;
     }
 
-    Type& operator  * () const
+    Type& operator*() const
     {
-        if (m_pointer == nullptr)
+        if (unique_ptr::operator bool())
             throw NullPointerError();
-        return *m_pointer;
+        return unique_ptr::operator*();
     }
 
-    inline Type* operator -> () const { return  m_pointer; }
+    DEPRECATED("use get") inline operator T*() const { return unique_ptr::get(); } // NOLINT(*-explicit-constructor)
 
-    inline operator T* () const { return m_pointer; } // NOLINT(*-explicit-constructor)
-
-    template<typename Y> inline bool operator == (const UniquePtr<Y>& rhs) const { return (void*)m_pointer == (void*)rhs.m_pointer; }
-    template<typename Y> inline bool operator != (const UniquePtr<Y>& rhs) const { return (void*)m_pointer != (void*)rhs.m_pointer; }
-
-    inline operator bool () const { return m_pointer != nullptr; } // NOLINT(*-explicit-constructor)
+    inline operator bool () const { return unique_ptr::get() != nullptr; } // NOLINT(*-explicit-constructor)
 };
 
-template<typename T, typename ... ARGS>
+template<typename T, typename... ARGS>
 UniquePtr<T> makeUnique(ARGS&&... args)
 {
     return UniquePtr<T>(new T(std::forward<ARGS>(args)...));
 }
 
-}
+} // namespace utl
 
 #ifndef UTILS_NAMESPACE
-#define UTILS_NAMESPACE
+    #define UTILS_NAMESPACE
 namespace utils = utl; // NOLINT
 #endif
 

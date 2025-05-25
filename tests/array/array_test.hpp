@@ -14,6 +14,7 @@
 #include "UtilsCPP_test.hpp"
 #include "UtilsCPP/Array.hpp"
 #include <vector>
+#include "UtilsCPP_test.hpp"
 
 #define ARRAY_TEST_FIXITURE_CONST_VERSION(className, baseClasseName) \
     template<typename T>                                             \
@@ -25,13 +26,6 @@
         ~className() override = default;                             \
         const Array<T>& m_array;                                     \
     };
-
-#define ASSERT_OR_EXPECT(ext, ...) \
-    if (assert)                    \
-        ASSERT_##ext(__VA_ARGS__); \
-    else                           \
-        EXPECT_##ext(__VA_ARGS__); \
-
 
 namespace utl::test
 {
@@ -54,8 +48,8 @@ protected:
     {
     }
 
-
-    void identityTest(bool assert = false) // test if m_array is identical to m_identityVector
+    template<bool assert = false>
+    void identityTest()
     {
         ASSERT_OR_EXPECT(EQ, this->m_array.size(),     this->m_identityVector.size());
         ASSERT_OR_EXPECT(EQ, this->m_array.capacity(), this->m_identityVector.capacity());
@@ -96,11 +90,12 @@ protected:
         new (&this->m_integrityArray) Array<T>;
         new (&this->m_identityVector) std::vector<T>;
 
-        this->integrityTest(true);
-        this->identityTest(true);
+        this->template integrityTest<true>();
+        this->template identityTest<true>();
     }
 
-    void integrityTest(bool assert = false) // test if m_array is identical to m_intgrityArray
+    template<bool assert = false>
+    void integrityTest() // test if m_array is identical to m_intgrityArray
     {
         ASSERT_OR_EXPECT(EQ, this->m_array.size(),     this->m_integrityArray.size());
         ASSERT_OR_EXPECT(EQ, this->m_array.capacity(), this->m_integrityArray.capacity());
@@ -142,8 +137,8 @@ protected:
             this->m_identityVector.push_back(getTestData<T>(i % 10));
         }
 
-        this->integrityTest(true);
-        this->identityTest(true);
+        this->template integrityTest<true>();
+        this->template identityTest<true>();
     }
 
     ~ArrayTestOnArrayWithData() override = default;

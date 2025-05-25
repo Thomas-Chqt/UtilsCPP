@@ -14,6 +14,12 @@
 #include <string>
 #include <vector>
 
+#define ASSERT_OR_EXPECT(ext, ...) \
+    if constexpr (assert)          \
+        ASSERT_##ext(__VA_ARGS__); \
+    else                           \
+        EXPECT_##ext(__VA_ARGS__);
+
 namespace utl::test
 {
 
