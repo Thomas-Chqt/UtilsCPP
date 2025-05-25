@@ -10,7 +10,6 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <concepts>
 #include <type_traits>
 
 namespace utl

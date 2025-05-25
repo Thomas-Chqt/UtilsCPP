@@ -36,11 +36,8 @@ protected:
 
     ~uniquePtrTest() override
     {
-        if (m_needDestruction)
-        {
-            utlUniquePtr.~unique_ptr();
-            stdUniquePtr.~unique_ptr();
-        }
+        utlUniquePtr.~unique_ptr();
+        stdUniquePtr.~unique_ptr();
     }
 
     utl::unique_ptr<T>& utlUniquePtr;
@@ -49,22 +46,11 @@ protected:
 private:
     alignas(utl::unique_ptr<T>) std::byte m_utlUniquePtrBuff[sizeof(utl::unique_ptr<T>)] = {};
     alignas(std::unique_ptr<T>) std::byte m_stdUniquePtrBuff[sizeof(std::unique_ptr<T>)] = {};
-
-protected:
-    bool m_needDestruction = false;
 };
-
 TYPED_TEST_SUITE(uniquePtrTest, TestedTypes);
 
 template<typename T>
-class uniquePtrTestStatic : public uniquePtrTest<T>
-{
-    void SetUp() override
-    {
-        uniquePtrTest<T>::SetUp();
-    }
-};
-
+class uniquePtrTestStatic : public testing::Test {};
 TYPED_TEST_SUITE(uniquePtrTestStatic, TestedTypes);
 
 template<typename T>
@@ -83,7 +69,6 @@ protected:
         new (&this->utlUniquePtr) utl::unique_ptr<T>;
         new (&this->stdUniquePtr) std::unique_ptr<T>;
         new (&this->integrityUniquePtr) utl::unique_ptr<T>;
-        this->m_needDestruction = true;
 
         this->template integrityTest<true>();
         this->template identityTest<true>();
@@ -105,7 +90,6 @@ protected:
 private:
     alignas(utl::unique_ptr<T>) std::byte m_integrityUniquePtrBuff[sizeof(utl::unique_ptr<T>)] = {};
 };
-
 TYPED_TEST_SUITE(uniquePtrTestOnDefaultPtr, TestedTypes);
 
 } // namespace utl::test
